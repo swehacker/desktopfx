@@ -30,20 +30,18 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class Switch extends Region {
+public class Switch extends ItemController {
     private boolean on = false;
     private final Region icon = new Region();
-    private final Text title = new Text("Light");
 
     public Switch() {
         getStyleClass().addAll("switch", "switch-off");
         title.getStyleClass().addAll("switch", "switch-title");
         icon.getStyleClass().addAll("switch", "switch-icon-off");
 
-        this.setClip(new Rectangle(100, 100));
+        this.setClip(new Rectangle(120, 120));
 
         BorderPane pane = new BorderPane();
 
@@ -59,10 +57,6 @@ public class Switch extends Region {
         pane.setCenter(icon);
 
         this.getChildren().add(pane);
-    }
-
-    public void setName(String title) {
-        this.title.setText(title);
     }
 
     public void turnOn() {

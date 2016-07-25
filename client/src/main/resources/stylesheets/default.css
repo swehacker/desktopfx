@@ -17,10 +17,10 @@
  * Sensors
  ****************************************************************************/
 .sensor {
-    -fx-min-width: 100px;
-    -fx-min-height: 100px;
-    -fx-max-width: 100px;
-    -fx-max-height: 100px;
+    -fx-min-width: 120px;
+    -fx-min-height: 120px;
+    -fx-max-width: 120px;
+    -fx-max-height: 120px;
     -fx-background-color: #9B4F96;
 }
 
@@ -30,9 +30,9 @@
     -fx-fill: rgb(255,255,255);
     -fx-alignment: center;
     -fx-padding: 10 0 5 0;
-    -fx-pref-width: 100px;
+    -fx-pref-width: 120px;
     -fx-pref-height: 30px;
-    -fx-max-width: 100px;
+    -fx-max-width: 120px;
 }
 
 .sensor-center {
@@ -43,9 +43,9 @@
     -fx-alignment: center;
     -fx-padding: 13 5 5 5;
     -fx-fit-to-height: true;
-    -fx-pref-width: 100px;
-    -fx-pref-height: 60px;
-    -fx-max-width: 100px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 80px;
+    -fx-max-width: 120px;
 }
 
 .sensor-bottom {
@@ -54,19 +54,19 @@
     -fx-fill: rgb(255,255,255);
     -fx-alignment: bottom-right;
     -fx-padding: 10 5 5 5;
-    -fx-pref-width: 100px;
+    -fx-pref-width: 120px;
     -fx-pref-height: 20px;
-    -fx-max-width: 100px;
+    -fx-max-width: 120px;
 }
 
 /****************************************************************************
  * Light Switches
  ****************************************************************************/
 .switch {
-    -fx-min-width: 100px;
-    -fx-min-height: 100px;
-    -fx-max-width: 100px;
-    -fx-max-height: 100px;
+    -fx-min-width: 120px;
+    -fx-min-height: 120px;
+    -fx-max-width: 120px;
+    -fx-max-height: 120px;
 }
 
 .switch-on {
@@ -79,7 +79,7 @@
 
 #vbox {
     -fx-alignment: center;
-    -fx-pref-width: 100px;
+    -fx-pref-width: 120px;
     -fx-padding: 10 0 5 0;
 }
 
@@ -97,7 +97,7 @@
     -fx-scale-shape: false;
     -fx-scale-x: 250%;
     -fx-scale-y: 220%;
-    -fx-min-height: 60px;
+    -fx-min-height: 80px;
     -fx-background-color: #FFFFFF;
 }
 
@@ -106,6 +106,6 @@
     -fx-scale-shape: false;
     -fx-scale-x: 250%;
     -fx-scale-y: 220%;
-    -fx-min-height: 60px;
+    -fx-min-height: 80px;
     -fx-background-color: #FFFFFF;
 }

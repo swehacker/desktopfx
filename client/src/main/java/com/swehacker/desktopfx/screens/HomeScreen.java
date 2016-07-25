@@ -27,14 +27,19 @@ package com.swehacker.desktopfx.screens;
 import com.swehacker.desktopfx.App;
 import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.controls.Humidity;
+import com.swehacker.desktopfx.controls.ItemController;
 import com.swehacker.desktopfx.controls.Switch;
 import com.swehacker.desktopfx.controls.Temperature;
 import com.swehacker.desktopfx.openhab.OpenHABService;
 import javafx.fxml.FXML;
 import javafx.scene.layout.FlowPane;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeScreen implements Screen {
     private ScreenController parent;
+    public static List<ItemController> controllers = new ArrayList<>();
 
     @FXML
     FlowPane switchPanel;
@@ -58,6 +63,7 @@ public class HomeScreen implements Screen {
                 if (item.getType() == Item.ItemType.SWITCH) {
                     Switch roomSwitch = new Switch();
                     roomSwitch.setName(item.getName());
+                    roomSwitch.setMQTTPath(item.getTopic());
                     if (OpenHABService.STATE.ON == App.getOpenHABService().getSwitchState(item.getLabel())) {
                         roomSwitch.turnOn();
                     }
@@ -71,22 +77,27 @@ public class HomeScreen implements Screen {
                         }
                     });
                     switchPanel.getChildren().add(roomSwitch);
+                    controllers.add(roomSwitch);
                 } else if (item.getType() == Item.ItemType.TEMPERATURE) {
                     Temperature roomTemperature = new Temperature();
                     roomTemperature.setName(item.getName());
+                    roomTemperature.setMQTTPath(item.getTopic());
                     roomTemperature.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
                     roomTemperature.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
                     });
                     sensorPanel.getChildren().add(roomTemperature);
+                    controllers.add(roomTemperature);
                 } else if (item.getType() == Item.ItemType.HUMIDITY) {
                     Humidity humidity = new Humidity();
                     humidity.setName(item.getName());
+                    humidity.setMQTTPath(item.getTopic());
                     humidity.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
                     humidity.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
                     });
                     sensorPanel.getChildren().add(humidity);
+                    controllers.add(humidity);
                 }
             }
         } catch (Throwable t) {

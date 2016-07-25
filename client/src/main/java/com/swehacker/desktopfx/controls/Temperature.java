@@ -25,7 +25,6 @@
 package com.swehacker.desktopfx.controls;
 
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -33,15 +32,13 @@ import javafx.scene.text.Text;
 /**
  * This represents a temperature sensor.
  */
-public class Temperature extends Region {
-    private final Region icon = new Region();
-    private final Text title = new Text("Temperatur");
+public class Temperature extends ItemController {
     private final Text celsius = new Text("- -");
 
     public Temperature() {
         getStyleClass().addAll("sensor");
         title.getStyleClass().add("sensor-top");
-        this.setClip(new Rectangle(100, 100));
+        this.setClip(new Rectangle(120, 120));
 
         BorderPane pane = new BorderPane();
 
@@ -71,9 +68,5 @@ public class Temperature extends Region {
         } catch (Throwable t) {
             System.out.println("Ej initierad sensor, hoppar över");
         }
-    }
-
-    public void setName(String title) {
-        this.title.setText(title);
     }
 }

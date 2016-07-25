@@ -26,6 +26,7 @@ package com.swehacker.desktopfx;
 
 import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.configuration.PropertiesConfiguration;
+import com.swehacker.desktopfx.openhab.ItemChangedListener;
 import com.swehacker.desktopfx.openhab.OpenHABService;
 import com.swehacker.desktopfx.screens.ScreenController;
 import javafx.application.Application;
@@ -44,20 +45,24 @@ import java.util.logging.Logger;
 public class App extends Application {
     private static final Logger logger = Logger.getLogger(App.class.getName());
     private static final ConsoleHandler CONSOLE_HANDLER = new ConsoleHandler();
-    private static final String SERVER_ADDRESS = "192.168.1.5";
+    private static final String OPENHAB_SERVER_ADDRESS = "192.168.1.5";
+    private static final String MQTT_SERVER_ADDRESS = "tcp://192.168.1.5:1883";
     private static final int SERVER_PORT = 8080;
     private static List<Item> items;
-    private static OpenHABService openHABService = new OpenHABService(SERVER_ADDRESS, SERVER_PORT);
-
+    private static OpenHABService openHABService;
+    private ItemChangedListener listener;
     private ScreenController screenController = new ScreenController();
     private Scene scene;
 
     @Override
     public void init() {
-        items = new PropertiesConfiguration().getConfig();
         CONSOLE_HANDLER.setLevel(Level.ALL);
         logger.setLevel(Level.ALL);
         logger.addHandler(CONSOLE_HANDLER);
+
+        items = new PropertiesConfiguration().getConfig();
+        openHABService = new OpenHABService(OPENHAB_SERVER_ADDRESS, SERVER_PORT);
+        listener = new ItemChangedListener(MQTT_SERVER_ADDRESS, "/apartment/#");
 
         screenController.loadScreens();
         screenController.changeScreen(ScreenController.SCREEN.HOME);
@@ -65,6 +70,7 @@ public class App extends Application {
 
     @Override
     public void stop() throws Exception {
+        listener.stop();
         super.stop();
     }
 
@@ -74,7 +80,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println(openHABService.getSwitchState("Living_FloorLamp"));
+        listener.start();
+
         // CREATE SCENE
         BorderPane root = new BorderPane();
         root.getStyleClass().addAll("root");
