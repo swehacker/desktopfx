@@ -24,8 +24,6 @@
 
 package com.swehacker.desktopfx.configuration;
 
-import com.swehacker.desktopfx.Item;
-
 import java.io.InputStreamReader;
 import java.util.*;
 

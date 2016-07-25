@@ -25,7 +25,7 @@
 package com.swehacker.desktopfx.screens;
 
 import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.Item;
+import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.controls.Humidity;
 import com.swehacker.desktopfx.controls.Switch;
 import com.swehacker.desktopfx.controls.Temperature;

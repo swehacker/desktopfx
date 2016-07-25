@@ -25,7 +25,7 @@
 package com.swehacker.desktopfx.openhab;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.swehacker.desktopfx.Item;
+import com.swehacker.desktopfx.configuration.Item;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;

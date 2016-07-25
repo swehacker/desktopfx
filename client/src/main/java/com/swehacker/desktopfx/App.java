@@ -24,6 +24,7 @@
 
 package com.swehacker.desktopfx;
 
+import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.configuration.PropertiesConfiguration;
 import com.swehacker.desktopfx.openhab.OpenHABService;
 import com.swehacker.desktopfx.screens.ScreenController;

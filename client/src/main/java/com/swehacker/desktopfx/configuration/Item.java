@@ -1,4 +1,4 @@
-package com.swehacker.desktopfx;
+package com.swehacker.desktopfx.configuration;
 
 public interface Item {
     enum ItemType {

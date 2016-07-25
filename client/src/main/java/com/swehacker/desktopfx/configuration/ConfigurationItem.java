@@ -1,7 +1,5 @@
 package com.swehacker.desktopfx.configuration;
 
-import com.swehacker.desktopfx.Item;
-
 public class ConfigurationItem implements Item {
     private String name;
     private String label;
