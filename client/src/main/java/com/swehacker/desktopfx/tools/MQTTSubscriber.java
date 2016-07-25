@@ -32,7 +32,7 @@ import org.eclipse.paho.client.mqttv3.*;
  */
 public class MQTTSubscriber implements MqttCallback {
 
-    private static String CLIENT_ID = "openhab-fx";
+    private static String CLIENT_ID = "desktop-fx";
     private String serverURI;
     private String subscription;
     private MqttClient client;

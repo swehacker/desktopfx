@@ -24,93 +24,96 @@
 
 package com.swehacker.desktopfx.openhab;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swehacker.desktopfx.Item;
 
-import java.net.URL;
-import java.util.ArrayList;
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Properties;
 
 public class OpenHABService {
     private static final Properties labels = new Properties();
-    private final List<Item> items = new ArrayList<>();
+    private final Client client;
+    private List<Item> items;
     private String _restURL;
-
-    static {
-        // Static map that connects item names (openhab) to "readable"
-        labels.put("Office_DeskLamp", "Skrivbord");
-        labels.put("Office_WBLamp", "Arbetsbänk");
-        labels.put("Office_Elect", "Elektronik");
-        labels.put("Bedroom_Bookcase", "Bokhylla");
-        labels.put("Bedroom_Lamp1", "Sovrum vänster");
-        labels.put("Bedroom_Lamp2", "Sovrum höger");
-        labels.put("Living_TableLamp", "Bordslampa");
-        labels.put("Living_FloorLamp", "Golvlampa");
-        labels.put("Hall_Sensor", "Hall");
-        labels.put("WANHAO_4S", "3D Skrivare");
-        labels.put("Temperature_Living", "Vardagsrum");
-        labels.put("Temperature_Office", "Labbet");
-        labels.put("Temperature_Bed", "Sovrum");
-        labels.put("Temperature_Balcony", "Balkong");
-    }
 
     public enum STATE {
         ON("ON"),
-        OFF("OFF");
+        OFF("OFF"),
+        UNKNOWN("UNKNOWN");
 
         private final String state;
         STATE(final String state) {
             this.state = state;
         }
+
+        public static STATE convert(String state) {
+            for (STATE s: STATE.values()) {
+                if ( s.name().equalsIgnoreCase(state) ) {
+                    return s;
+                }
+            }
+
+            return UNKNOWN;
+        }
     }
 
     public OpenHABService(final String ip, final int port) {
         _restURL = "http://" + ip + ":" + port + "/rest";
+        client = ClientBuilder.newBuilder()
+                .build();
     }
 
-    public void toggle(Item item, STATE state) {
-        /*WebTarget target = client.target(item.getLink());
+    public STATE getSwitchState(String item) {
+        WebTarget target = client.target(_restURL + "/items/" + item);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        if ( response.getStatus() == 200 ) {
+            Switch _item = response.readEntity(Switch.class);
+            return STATE.convert(_item.state);
+        }
+
+        return null;
+    }
+
+    public void switchState(String item, STATE state) {
+        WebTarget target = client.target(_restURL + "/items/" + item);
         Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN_TYPE);
-        builder.post(Entity.entity(state.state, MediaType.TEXT_PLAIN));*/
+        builder.post(Entity.entity(state.state, MediaType.TEXT_PLAIN));
     }
 
-    public List<Item> getSensor() throws Exception {
-        List<Item> all = getAll();
-        ArrayList<Item> sensors = new ArrayList<>();
-        for (Item item : all) {
-            if ("NumberItem".equals(item.getType())) {
-                sensors.add(item);
-            }
+    public String getSensorValue(String item) {
+        WebTarget target = client.target(_restURL + "/items/" + item);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        if ( response.getStatus() == 200 ) {
+            SensorValue _item = response.readEntity(SensorValue.class);
+            return _item.state;
         }
-        return sensors;
+
+        return null;
     }
 
-    public List<Item> getSwitches() throws Exception {
-        List<Item> all = getAll();
-        ArrayList<Item> switches = new ArrayList<>();
-        for (Item item : all) {
-            if ("SwitchItem".equals(item.getType())) {
-                switches.add(item);
-            }
-        }
-        return switches;
+    public static class Switch {
+        public String link;
+        public String state;
+        public String type;
+        public String name;
+        public String label;
+        public List tags;
+        public List groupNames;
     }
 
-    private List<Item> getAll() throws Exception {
-        ArrayList<Item> _items = new ArrayList<>();
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonParser jp = new JsonFactory().createParser(new URL(_restURL + "/items"));
-        List<Item> items = mapper.readValue(jp, new TypeReference<ArrayList<Item>>() {});
-        for ( Item item : items) {
-            if ( item.getLabel() != null ) {
-                _items.add(item);
-            }
-        }
-
-        return _items;
+    public static class SensorValue {
+        public String link;
+        public String state;
+        @JsonIgnore
+        public List stateDescription;
+        public String type;
+        public String name;
+        public String label;
+        public String category;
+        public List tags;
+        public List groupNames;
     }
 }

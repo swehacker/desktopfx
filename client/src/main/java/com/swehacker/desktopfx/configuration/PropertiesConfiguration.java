@@ -24,19 +24,14 @@
 
 package com.swehacker.desktopfx.configuration;
 
-import com.swehacker.desktopfx.tools.MQTTSubscriber;
+import com.swehacker.desktopfx.Item;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.*;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Properties;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class PropertiesConfiguration {
     private static final String FILENAME = "config.properties";
-    private void watchFile() {
+    /*private void watchFile() {
         URL url = MQTTSubscriber.class.getClassLoader().getResource(FILENAME);
         String fullPath = url.getPath();
 
@@ -63,13 +58,23 @@ public class PropertiesConfiguration {
         } catch (IOException | InterruptedException exception ) {
             exception.printStackTrace();
         }
-    }
-    private void readConfig() {
-        Properties prop = new Properties();
-        HashSet<String> keys = new HashSet<>();
+    }*/
 
+
+    public List<Item> getConfig() {
+        Properties prop = new Properties();
+        ArrayList<Item> items = new ArrayList<>();
+
+        readConfig(prop, items);
+        group(items);
+
+        return items;
+    }
+
+    private void readConfig(Properties prop, List<Item> items) {
+        HashSet<String> keys = new HashSet<>();
         try {
-            InputStream is = MQTTSubscriber.class.getClassLoader().getResourceAsStream("config.properties");
+            InputStreamReader is = new InputStreamReader(PropertiesConfiguration.class.getClassLoader().getResourceAsStream("config.properties"), "UTF-8");
             prop.load(is);
 
             Enumeration e = prop.propertyNames();
@@ -79,15 +84,31 @@ public class PropertiesConfiguration {
             }
 
             for (String key: keys) {
-                System.out.println(key);
-
+                items.add(get(prop, key));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public static void main(String...args) {
-        new PropertiesConfiguration().watchFile();
+    private Item get(Properties prop, String key) {
+        ConfigurationItem item = new ConfigurationItem();
+        item.setTopic(prop.getProperty(key + ".topic"));
+        item.setLabel(prop.getProperty(key + ".label"));
+        item.setName(prop.getProperty(key + ".name"));
+        item.setRoom(prop.getProperty(key + ".group"));
+        item.setType(prop.getProperty(key + ".type"));
+
+        return item;
+    }
+
+    private void group(List items) {
+        Collections.sort(items, new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2)
+            {
+                return item1.getRoom().compareTo(item2.getRoom());
+            }
+        });
     }
 }

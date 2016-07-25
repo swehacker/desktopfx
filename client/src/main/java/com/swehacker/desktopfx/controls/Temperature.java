@@ -24,64 +24,56 @@
 
 package com.swehacker.desktopfx.controls;
 
-import javafx.geometry.VPos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
-public class LightSwitch extends Region {
-    private boolean on = false;
+/**
+ * This represents a temperature sensor.
+ */
+public class Temperature extends Region {
     private final Region icon = new Region();
-    private final Text title = new Text("Light");
+    private final Text title = new Text("Temperatur");
+    private final Text celsius = new Text("- -");
 
-    public LightSwitch() {
-        getStyleClass().addAll("switch", "switch-off");
-        title.getStyleClass().addAll("switch", "switch-title");
-        icon.getStyleClass().addAll("switch", "switch-icon-off");
-
+    public Temperature() {
+        getStyleClass().addAll("sensor");
+        title.getStyleClass().add("sensor-top");
         this.setClip(new Rectangle(100, 100));
 
         BorderPane pane = new BorderPane();
 
         VBox box = new VBox();
-        box.setId("vbox");
-
-        title.setTextAlignment(TextAlignment.CENTER);
-        title.setTextOrigin(VPos.CENTER);
-        title.setFontSmoothingType(FontSmoothingType.LCD);
+        box.getStyleClass().add("sensor-top");
         box.getChildren().add(title);
 
         pane.setTop(box);
-        pane.setCenter(icon);
+
+        celsius.getStyleClass().add("sensor-center");
+        pane.setCenter(celsius);
+
+        VBox bottomBox = new VBox();
+
+        Text t = new Text("°C");
+        t.getStyleClass().add("sensor-bottom");
+        bottomBox.getStyleClass().add("sensor-bottom");
+        bottomBox.getChildren().add(t);
+        pane.setBottom(bottomBox);
 
         this.getChildren().add(pane);
     }
 
-    public void setName(String title) {
-        this.title.setText(title);
-    }
-
-    public void flip() {
-        if (on) {
-            on = false;
-            this.getStyleClass().add("switch-off");
-            this.getStyleClass().remove("switch-on");
-            icon.getStyleClass().add("switch-icon-off");
-            icon.getStyleClass().remove("switch-icon-on");
-        } else {
-            on = true;
-            this.getStyleClass().add("switch-on");
-            this.getStyleClass().remove("switch-off");
-            icon.getStyleClass().add("switch-icon-on");
-            icon.getStyleClass().remove("switch-icon-off");
+    public void setValue(String text) {
+        try {
+            celsius.setText("" + Double.parseDouble(text));
+        } catch (Throwable t) {
+            System.out.println("Ej initierad sensor, hoppar över");
         }
     }
 
-    public boolean isOn() {
-        return on;
+    public void setName(String title) {
+        this.title.setText(title);
     }
 }

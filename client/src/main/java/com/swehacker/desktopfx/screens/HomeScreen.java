@@ -24,17 +24,16 @@
 
 package com.swehacker.desktopfx.screens;
 
-import com.swehacker.desktopfx.openhab.Item;
-import com.swehacker.desktopfx.controls.LightSwitch;
-import com.swehacker.desktopfx.controls.Sensor;
+import com.swehacker.desktopfx.App;
+import com.swehacker.desktopfx.Item;
+import com.swehacker.desktopfx.controls.Humidity;
+import com.swehacker.desktopfx.controls.Switch;
+import com.swehacker.desktopfx.controls.Temperature;
 import com.swehacker.desktopfx.openhab.OpenHABService;
 import javafx.fxml.FXML;
 import javafx.scene.layout.FlowPane;
 
 public class HomeScreen implements Screen {
-    private static final String SERVER_ADDRESS = "192.168.1.5";
-    private static final int SERVER_PORT = 8080;
-    private OpenHABService openHABService;
     private ScreenController parent;
 
     @FXML
@@ -50,38 +49,45 @@ public class HomeScreen implements Screen {
     }
 
     public void init() {
-        openHABService = new OpenHABService(SERVER_ADDRESS, SERVER_PORT);
         update();
     }
 
     private void update() {
         try {
-            for (Item item : openHABService.getSwitches()) {
-                LightSwitch roomSwitch = new LightSwitch();
-                roomSwitch.setName(item.getLabel());
-                if ("ON".equals(item.getState())) {
-                    roomSwitch.flip();
-                }
-
-                roomSwitch.setOnMouseClicked(event -> {
-                    roomSwitch.flip();
-                    if (roomSwitch.isOn()) {
-                        openHABService.toggle(item, OpenHABService.STATE.ON);
-                    } else {
-                        openHABService.toggle(item, OpenHABService.STATE.OFF);
+            for (Item item : App.getItems()) {
+                if (item.getType() == Item.ItemType.SWITCH) {
+                    Switch roomSwitch = new Switch();
+                    roomSwitch.setName(item.getName());
+                    if (OpenHABService.STATE.ON == App.getOpenHABService().getSwitchState(item.getLabel())) {
+                        roomSwitch.turnOn();
                     }
-                });
-                switchPanel.getChildren().add(roomSwitch);
-            }
 
-            for (Item item : openHABService.getSensor()) {
-                Sensor roomSensor = new Sensor();
-                roomSensor.setName(item.getLabel());
-                roomSensor.setValue(item.getState());
-                roomSensor.setOnMouseClicked(event -> {
-                    parent.changeScreen(ScreenController.SCREEN.SENSOR);
-                });
-                sensorPanel.getChildren().add(roomSensor);
+                    roomSwitch.setOnMouseClicked(event -> {
+                        roomSwitch.flip();
+                        if (roomSwitch.isOn()) {
+                            App.getOpenHABService().switchState(item.getLabel(), OpenHABService.STATE.ON);
+                        } else {
+                            App.getOpenHABService().switchState(item.getLabel(), OpenHABService.STATE.OFF);
+                        }
+                    });
+                    switchPanel.getChildren().add(roomSwitch);
+                } else if (item.getType() == Item.ItemType.TEMPERATURE) {
+                    Temperature roomTemperature = new Temperature();
+                    roomTemperature.setName(item.getName());
+                    roomTemperature.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
+                    roomTemperature.setOnMouseClicked(event -> {
+                        parent.changeScreen(ScreenController.SCREEN.SENSOR);
+                    });
+                    sensorPanel.getChildren().add(roomTemperature);
+                } else if (item.getType() == Item.ItemType.HUMIDITY) {
+                    Humidity humidity = new Humidity();
+                    humidity.setName(item.getName());
+                    humidity.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
+                    humidity.setOnMouseClicked(event -> {
+                        parent.changeScreen(ScreenController.SCREEN.SENSOR);
+                    });
+                    sensorPanel.getChildren().add(humidity);
+                }
             }
         } catch (Throwable t) {
             t.printStackTrace();
