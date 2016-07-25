@@ -1,2 +1,4 @@
 bin/
 installation-files/
+build/
+.gradle/
