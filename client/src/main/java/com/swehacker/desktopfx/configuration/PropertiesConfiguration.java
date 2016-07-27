@@ -24,10 +24,14 @@
 
 package com.swehacker.desktopfx.configuration;
 
+import com.swehacker.desktopfx.App;
+
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class PropertiesConfiguration {
+    private static final Logger LOG = Logger.getLogger(PropertiesConfiguration.class.getName());
     private static final String FILENAME = "config.properties";
     /*private void watchFile() {
         URL url = MQTTSubscriber.class.getClassLoader().getResource(FILENAME);
@@ -96,6 +100,14 @@ public class PropertiesConfiguration {
         item.setName(prop.getProperty(key + ".name"));
         item.setRoom(prop.getProperty(key + ".group"));
         item.setType(prop.getProperty(key + ".type"));
+        if ( item.getType() == Item.ItemType.SWITCH ) {
+            item.setValue(App.getOpenHABService().getSwitchState(item.getLabel()).name());
+        } else {
+            item.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
+        }
+
+        LOG.info(item.getTopic() + ": " + item.getValue());
+
 
         return item;
     }

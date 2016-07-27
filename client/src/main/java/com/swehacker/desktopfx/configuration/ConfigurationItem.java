@@ -1,11 +1,15 @@
 package com.swehacker.desktopfx.configuration;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class ConfigurationItem implements Item {
     private String name;
     private String label;
     private String topic;
     private String room;
     private ItemType type;
+    private StringProperty value = new SimpleStringProperty();
 
     ConfigurationItem() {
 
@@ -70,6 +74,18 @@ public class ConfigurationItem implements Item {
 
     void setType(ItemType type) {
         this.type = type;
+    }
+
+    public String getValue() {
+        return value.get();
+    }
+
+    public StringProperty valueProperty() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value.set(value);
     }
 
     private void checkIfEmpty(String str) throws IllegalArgumentException {

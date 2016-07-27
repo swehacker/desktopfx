@@ -24,6 +24,7 @@
 
 package com.swehacker.desktopfx.controls;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -33,7 +34,7 @@ import javafx.scene.text.Text;
  * This represents a humidity sensor.
  */
 public class Humidity extends ItemController {
-    private final Text celsius = new Text("- -");
+    private final Text value = new Text("- -");
 
     public Humidity() {
         getStyleClass().addAll("sensor");
@@ -48,8 +49,8 @@ public class Humidity extends ItemController {
 
         pane.setTop(box);
 
-        celsius.getStyleClass().add("sensor-center");
-        pane.setCenter(celsius);
+        value.getStyleClass().add("sensor-center");
+        pane.setCenter(value);
 
         VBox bottomBox = new VBox();
 
@@ -62,9 +63,13 @@ public class Humidity extends ItemController {
         this.getChildren().add(pane);
     }
 
+    public StringProperty valueProperty() {
+        return value.textProperty();
+    }
+
     public void setValue(String text) {
         try {
-            celsius.setText("" + Double.parseDouble(text));
+            value.setText("" + Double.parseDouble(text));
         } catch (Throwable t) {
             System.out.println("Ej initierad sensor, hoppar över");
         }

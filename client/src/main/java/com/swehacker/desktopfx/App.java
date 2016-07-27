@@ -60,8 +60,8 @@ public class App extends Application {
         logger.setLevel(Level.ALL);
         logger.addHandler(CONSOLE_HANDLER);
 
-        items = new PropertiesConfiguration().getConfig();
         openHABService = new OpenHABService(OPENHAB_SERVER_ADDRESS, SERVER_PORT);
+        items = new PropertiesConfiguration().getConfig();
         listener = new ItemChangedListener(MQTT_SERVER_ADDRESS, "/apartment/#");
 
         screenController.loadScreens();

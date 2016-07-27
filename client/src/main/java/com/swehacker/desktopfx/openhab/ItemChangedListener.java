@@ -1,5 +1,7 @@
 package com.swehacker.desktopfx.openhab;
 
+import com.swehacker.desktopfx.App;
+import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.controls.Humidity;
 import com.swehacker.desktopfx.controls.ItemController;
 import com.swehacker.desktopfx.controls.Switch;
@@ -51,23 +53,11 @@ public class ItemChangedListener implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
-        LOG.info(topic + ": " + message.toString());
-        Platform.runLater(()-> {
-            for (ItemController ctrl : HomeScreen.controllers) {
-                if (ctrl.getMQTTPath().equalsIgnoreCase(topic)) {
-                    if (ctrl instanceof Temperature) {
-                        ((Temperature) ctrl).setValue(message.toString());
-                    } else if (ctrl instanceof Humidity) {
-                        ((Humidity) ctrl).setValue(message.toString());
-                    } else if (ctrl instanceof Switch) {
-                        if (message.toString().equalsIgnoreCase("OFF")) {
-                            ((Switch) ctrl).turnOff();
-                        } else {
-                            ((Switch) ctrl).turnOn();
-                        }
-                    } else {
-                        LOG.info("No match for " + topic);
-                    }
+        Platform.runLater(() -> {
+            LOG.info(topic + ": " + message.toString());
+            for (Item item : App.getItems()) {
+                if (topic.equalsIgnoreCase(item.getTopic())) {
+                    item.setValue(message.toString());
                 }
             }
         });

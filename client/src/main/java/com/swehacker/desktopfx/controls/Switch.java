@@ -24,6 +24,8 @@
 
 package com.swehacker.desktopfx.controls;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.VPos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -32,8 +34,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.TextAlignment;
 
+import java.util.logging.Logger;
+
 public class Switch extends ItemController {
+    private static final Logger LOG = Logger.getLogger(ItemController.class.toString());
     private boolean on = false;
+    private StringProperty value = new SimpleStringProperty("");
     private final Region icon = new Region();
 
     public Switch() {
@@ -44,7 +50,6 @@ public class Switch extends ItemController {
         this.setClip(new Rectangle(120, 120));
 
         BorderPane pane = new BorderPane();
-
         VBox box = new VBox();
         box.setId("vbox");
 
@@ -55,6 +60,20 @@ public class Switch extends ItemController {
 
         pane.setTop(box);
         pane.setCenter(icon);
+
+        // I have no idea why this is needed, but if it's not there it will not be possible to display switches on/off
+        // that is not turned on when the application starts.
+        turnOn();
+
+        value.addListener((observable)-> {
+            if ( value.getValue().equalsIgnoreCase("ON")) {
+                turnOn();
+            } else if ( value.getValue().equalsIgnoreCase("OFF")) {
+                turnOff();
+            } else {
+                LOG.severe("Unknown command: " + observable.toString());
+            }
+        });
 
         this.getChildren().add(pane);
     }
@@ -75,12 +94,16 @@ public class Switch extends ItemController {
         icon.getStyleClass().remove("switch-icon-on");
     }
 
-    public void flip() {
-        if (on) {
-            turnOff();
-        } else {
-            turnOn();
-        }
+    public String getValue() {
+        return value.get();
+    }
+
+    public StringProperty valueProperty() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value.set(value);
     }
 
     public boolean isOn() {
