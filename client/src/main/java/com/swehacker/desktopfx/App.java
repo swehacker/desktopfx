@@ -26,10 +26,12 @@ package com.swehacker.desktopfx;
 
 import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.configuration.PropertiesConfiguration;
+import com.swehacker.desktopfx.events.EventRepository;
 import com.swehacker.desktopfx.openhab.ItemChangedListener;
 import com.swehacker.desktopfx.openhab.OpenHABService;
 import com.swehacker.desktopfx.screens.ScreenController;
 import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -43,26 +45,36 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class App extends Application {
-    private static final Logger logger = Logger.getLogger(App.class.getName());
+    private static final Logger LOG = Logger.getLogger(App.class.getName());
     private static final ConsoleHandler CONSOLE_HANDLER = new ConsoleHandler();
-    private static final String OPENHAB_SERVER_ADDRESS = "192.168.1.5";
-    private static final String MQTT_SERVER_ADDRESS = "tcp://192.168.1.5:1883";
-    private static final int SERVER_PORT = 8080;
+    private static final String OPENHAB_SERVER_ADDRESS =    System.getProperty("openhab.server.address", "localhost");
+    private static final String OPENHAB_SERVER_PORT =       System.getProperty("openhab.server.port", "8080");
+    private static final String DESKTOPFX_SERVER_ADDRESS =  System.getProperty("desktopfx.server.address", "localhost");
+    private static final String DESKTOPFX_SERVER_PORT =     System.getProperty("desktopfx.server.port", "8080");
+    private static final String MQTT_SERVER_ADDRESS =       System.getProperty("mqtt.server.address", "tcp://localhost:1883");
+    private static final String MQTT_SERVER_TOPIC =         System.getProperty("mqtt.server.topic", "/apartment/#");
     private static List<Item> items;
     private static OpenHABService openHABService;
+    private static EventRepository eventRepository;
     private ItemChangedListener listener;
     private ScreenController screenController = new ScreenController();
     private Scene scene;
+    private static SimpleObjectProperty<Item> currentItem = new SimpleObjectProperty<>();
 
     @Override
     public void init() {
         CONSOLE_HANDLER.setLevel(Level.ALL);
-        logger.setLevel(Level.ALL);
-        logger.addHandler(CONSOLE_HANDLER);
+        LOG.setLevel(Level.ALL);
+        LOG.addHandler(CONSOLE_HANDLER);
 
-        openHABService = new OpenHABService(OPENHAB_SERVER_ADDRESS, SERVER_PORT);
+        LOG.config("OPENHAB SERVER: " + OPENHAB_SERVER_ADDRESS + ":" + OPENHAB_SERVER_PORT);
+        LOG.config("DESKTOPFX SERVER: " + DESKTOPFX_SERVER_ADDRESS + ":" + DESKTOPFX_SERVER_PORT);
+        LOG.config("MQTT SERVER: " + MQTT_SERVER_ADDRESS + MQTT_SERVER_TOPIC);
+
+        openHABService = new OpenHABService(OPENHAB_SERVER_ADDRESS, Integer.parseInt(OPENHAB_SERVER_PORT));
+        eventRepository = new EventRepository(DESKTOPFX_SERVER_ADDRESS, Integer.parseInt(DESKTOPFX_SERVER_PORT));
         items = new PropertiesConfiguration().getConfig();
-        listener = new ItemChangedListener(MQTT_SERVER_ADDRESS, "/apartment/#");
+        listener = new ItemChangedListener(MQTT_SERVER_ADDRESS, MQTT_SERVER_TOPIC);
 
         screenController.loadScreens();
         screenController.changeScreen(ScreenController.SCREEN.HOME);
@@ -93,7 +105,7 @@ public class App extends Application {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
         scene = new Scene(scrollPane, bounds.getWidth(), bounds.getHeight());
-        logger.config("Setting the Screen to " + bounds.getWidth() + "x" + bounds.getHeight());
+        LOG.config("Setting the Screen to " + bounds.getWidth() + "x" + bounds.getHeight());
 
         setStylesheets();
 
@@ -105,7 +117,7 @@ public class App extends Application {
         primaryStage.setY(bounds.getMinY());
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
-        logger.config("Setting the Screen to " + bounds.getWidth() + "x" + bounds.getHeight());
+        LOG.config("Setting the Screen to " + bounds.getWidth() + "x" + bounds.getHeight());
 
         primaryStage.show();
     }
@@ -121,6 +133,22 @@ public class App extends Application {
 
     public static OpenHABService getOpenHABService() {
         return openHABService;
+    }
+
+    public static EventRepository getEventRepository() {
+        return eventRepository;
+    }
+
+    public static void setCurrentItem(Item currentItem) {
+        App.currentItem.set(currentItem);
+    }
+
+    public static Item getCurrentItem() {
+        return currentItem.get();
+    }
+
+    public static SimpleObjectProperty<Item> currentItemProperty() {
+        return currentItem;
     }
 
     /**

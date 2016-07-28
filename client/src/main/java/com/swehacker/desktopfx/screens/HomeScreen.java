@@ -74,6 +74,7 @@ public class HomeScreen implements Screen {
                     roomTemperature.valueProperty().bind(item.valueProperty());
                     roomTemperature.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
+                        App.setCurrentItem(item);
                     });
                     item.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
                     sensorPanel.getChildren().add(roomTemperature);
@@ -83,6 +84,7 @@ public class HomeScreen implements Screen {
                     humidity.valueProperty().bind(item.valueProperty());
                     humidity.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
+                        App.setCurrentItem(item);
                     });
                     item.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
                     sensorPanel.getChildren().add(humidity);
