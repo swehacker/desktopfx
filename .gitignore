@@ -1,6 +1,9 @@
-bin/
-installation-files/
 build/
-.gradle/
 .idea/
-desktop-fx.iml
+.gradle/
+gradlew.bat
+gradlew
+gradle/
+*.log
+installation-files/
+.DS_Store

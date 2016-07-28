@@ -1,7 +1,0 @@
-build/
-.idea/
-.gradle/
-gradlew.bat
-gradlew
-gradle/
-*.log
