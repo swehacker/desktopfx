@@ -1,21 +1,17 @@
 package com.swehacker.desktopfx.openhab;
 
 import com.swehacker.desktopfx.App;
+import com.swehacker.desktopfx.util.NetworkUtil;
 import com.swehacker.desktopfx.configuration.Item;
-import com.swehacker.desktopfx.controls.Humidity;
-import com.swehacker.desktopfx.controls.ItemController;
-import com.swehacker.desktopfx.controls.Switch;
-import com.swehacker.desktopfx.controls.Temperature;
-import com.swehacker.desktopfx.screens.HomeScreen;
 import javafx.application.Platform;
 import org.eclipse.paho.client.mqttv3.*;
 
-import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ItemChangedListener implements MqttCallback {
     private static final Logger LOG = Logger.getLogger(ItemChangedListener.class.getName());
-    private static final String CLIENT_ID = "desktop-fx" + new Date().toString().hashCode();
+    private static final String CLIENT_ID = "desktopfx-" + NetworkUtil.getMACAddress();
     private String serverURI;
     private String subscription;
     private MqttClient client;
@@ -27,13 +23,12 @@ public class ItemChangedListener implements MqttCallback {
 
     public void start() {
         try {
-            System.out.println("Connecting to " + serverURI);
             client = new MqttClient(serverURI, CLIENT_ID);
             client.connect();
             client.setCallback(this);
             client.subscribe(subscription);
         } catch (MqttException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, "Couldn't connect to the MQTT Server!", e);
         }
     }
 
@@ -42,7 +37,7 @@ public class ItemChangedListener implements MqttCallback {
             client.disconnect();
             client.close();
         } catch (MqttException mqttException) {
-            LOG.severe(mqttException.getMessage());
+            LOG.log(Level.INFO, "Couldn't close the client, trying to force!", mqttException);
         }
     }
 
@@ -54,7 +49,6 @@ public class ItemChangedListener implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Platform.runLater(() -> {
-            LOG.info(topic + ": " + message.toString());
             for (Item item : App.getItems()) {
                 if (topic.equalsIgnoreCase(item.getTopic())) {
                     item.setValue(message.toString());
