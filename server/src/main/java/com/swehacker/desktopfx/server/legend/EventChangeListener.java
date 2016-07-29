@@ -2,6 +2,7 @@ package com.swehacker.desktopfx.server.legend;
 
 import com.swehacker.desktopfx.server.util.NetworkUtil;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -28,7 +29,7 @@ public class EventChangeListener implements MqttCallback {
 
     public void start() {
         try {
-            client = new MqttClient(serverURI, CLIENT_ID);
+            client = new MqttClient(serverURI, CLIENT_ID, new MemoryPersistence());
             client.connect();
             client.setCallback(this);
             client.subscribe(subscription);
