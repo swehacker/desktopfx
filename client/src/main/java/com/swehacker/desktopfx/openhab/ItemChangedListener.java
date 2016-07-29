@@ -5,6 +5,7 @@ import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.util.NetworkUtil;
 import javafx.application.Platform;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +24,7 @@ public class ItemChangedListener implements MqttCallback {
 
     public void start() {
         try {
-            client = new MqttClient(serverURI, CLIENT_ID);
+            client = new MqttClient(serverURI, CLIENT_ID, new MemoryPersistence());
             client.connect();
             client.setCallback(this);
             client.subscribe(subscription);
