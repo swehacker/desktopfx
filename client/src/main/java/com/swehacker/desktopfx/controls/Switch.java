@@ -26,44 +26,32 @@ package com.swehacker.desktopfx.controls;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.geometry.VPos;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.TextAlignment;
 
 import java.util.logging.Logger;
 
 public class Switch extends ItemController {
     private static final Logger LOG = Logger.getLogger(ItemController.class.toString());
     private boolean on = false;
-    private StringProperty value = new SimpleStringProperty("");
-    private final Region icon = new Region();
+    private final StringProperty value = new SimpleStringProperty("");
+    private final StackPane iconPane = new StackPane();
+    private final VBox vBox = new VBox();
 
     public Switch() {
-        getStyleClass().addAll("switch", "switch-off");
-        title.getStyleClass().addAll("switch", "switch-title");
-        icon.getStyleClass().addAll("switch", "switch-icon-off");
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getStyleClass().addAll("switch", "switch-off");
 
-        this.setClip(new Rectangle(120, 120));
+        StackPane titlePane = new StackPane();
+        titlePane.getStyleClass().add("switch-icon");
+        title.getStyleClass().addAll("switch-title");
+        titlePane.setAlignment(title, Pos.CENTER);
+        titlePane.getChildren().add(title);
 
-        BorderPane pane = new BorderPane();
-        VBox box = new VBox();
-        box.setId("vbox");
+        iconPane.getStyleClass().addAll("switch-icon-off");
 
-        title.setTextAlignment(TextAlignment.CENTER);
-        title.setTextOrigin(VPos.CENTER);
-        title.setFontSmoothingType(FontSmoothingType.LCD);
-        box.getChildren().add(title);
-
-        pane.setTop(box);
-        pane.setCenter(icon);
-
-        // I have no idea why this is needed, but if it's not there it will not be possible to display switches on/off
-        // that is not turned on when the application starts.
-        turnOn();
+        vBox.getChildren().addAll(title, iconPane);
 
         value.addListener((observable)-> {
             if ( value.getValue().equalsIgnoreCase("ON")) {
@@ -75,23 +63,23 @@ public class Switch extends ItemController {
             }
         });
 
-        this.getChildren().add(pane);
+        this.getChildren().add(vBox);
     }
 
     public void turnOn() {
         on = true;
-        this.getStyleClass().add("switch-on");
-        this.getStyleClass().remove("switch-off");
-        icon.getStyleClass().add("switch-icon-on");
-        icon.getStyleClass().remove("switch-icon-off");
+        vBox.getStyleClass().add("switch-on");
+        vBox.getStyleClass().remove("switch-off");
+        iconPane.getStyleClass().add("switch-icon-on");
+        iconPane.getStyleClass().remove("switch-icon-off");
     }
 
     public void turnOff() {
         on = false;
-        this.getStyleClass().add("switch-off");
-        this.getStyleClass().remove("switch-on");
-        icon.getStyleClass().add("switch-icon-off");
-        icon.getStyleClass().remove("switch-icon-on");
+        vBox.getStyleClass().add("switch-off");
+        vBox.getStyleClass().remove("switch-on");
+        iconPane.getStyleClass().add("switch-icon-off");
+        iconPane.getStyleClass().remove("switch-icon-on");
     }
 
     public String getValue() {

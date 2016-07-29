@@ -4,9 +4,7 @@ import com.swehacker.desktopfx.server.util.NetworkUtil;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-import java.net.NetworkInterface;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;

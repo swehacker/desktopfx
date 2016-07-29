@@ -24,7 +24,6 @@
 
 package com.swehacker.desktopfx.openhab;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.swehacker.desktopfx.configuration.Item;
 
 import javax.ws.rs.client.*;
@@ -70,8 +69,8 @@ public class OpenHABService {
         WebTarget target = client.target(_restURL + "/items/" + item);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         if ( response.getStatus() == 200 ) {
-            Switch _item = response.readEntity(Switch.class);
-            return STATE.convert(_item.state);
+            SwitchValue _item = response.readEntity(SwitchValue.class);
+            return STATE.convert(_item.getState());
         }
 
         return null;
@@ -88,32 +87,9 @@ public class OpenHABService {
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         if ( response.getStatus() == 200 ) {
             SensorValue _item = response.readEntity(SensorValue.class);
-            return _item.state;
+            return _item.getState();
         }
 
         return null;
-    }
-
-    public static class Switch {
-        public String link;
-        public String state;
-        public String type;
-        public String name;
-        public String label;
-        public List tags;
-        public List groupNames;
-    }
-
-    public static class SensorValue {
-        public String link;
-        public String state;
-        @JsonIgnore
-        public List stateDescription;
-        public String type;
-        public String name;
-        public String label;
-        public String category;
-        public List tags;
-        public List groupNames;
     }
 }

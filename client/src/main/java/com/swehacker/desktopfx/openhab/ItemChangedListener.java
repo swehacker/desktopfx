@@ -1,8 +1,8 @@
 package com.swehacker.desktopfx.openhab;
 
 import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.util.NetworkUtil;
 import com.swehacker.desktopfx.configuration.Item;
+import com.swehacker.desktopfx.util.NetworkUtil;
 import javafx.application.Platform;
 import org.eclipse.paho.client.mqttv3.*;
 

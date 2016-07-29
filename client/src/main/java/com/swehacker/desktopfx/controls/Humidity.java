@@ -25,9 +25,9 @@
 package com.swehacker.desktopfx.controls;
 
 import javafx.beans.property.StringProperty;
-import javafx.scene.layout.BorderPane;
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 /**
@@ -35,32 +35,35 @@ import javafx.scene.text.Text;
  */
 public class Humidity extends ItemController {
     private final Text value = new Text("- -");
+    private final Text percent = new Text("%");
 
     public Humidity() {
         getStyleClass().addAll("sensor");
+
+        VBox vBox = new VBox();
+        StackPane sensorTop = new StackPane();
+        sensorTop.getStyleClass().add("sensor-top");
         title.getStyleClass().add("sensor-top");
-        this.setClip(new Rectangle(120, 120));
+        sensorTop.getChildren().add(title);
+        sensorTop.setAlignment(title, Pos.CENTER);
+        vBox.getChildren().add(sensorTop);
 
-        BorderPane pane = new BorderPane();
 
-        VBox box = new VBox();
-        box.getStyleClass().add("sensor-top");
-        box.getChildren().add(title);
-
-        pane.setTop(box);
-
+        StackPane sensorCenter = new StackPane();
         value.getStyleClass().add("sensor-center");
-        pane.setCenter(value);
+        sensorCenter.getStyleClass().add("sensor-center");
+        sensorCenter.getChildren().add(value);
+        sensorCenter.setAlignment(value, Pos.CENTER);
+        vBox.getChildren().add(sensorCenter);
 
-        VBox bottomBox = new VBox();
+        StackPane sensorBottom = new StackPane();
+        percent.getStyleClass().add("sensor-bottom");
+        sensorBottom.getStyleClass().add("sensor-bottom");
+        sensorBottom.getChildren().add(percent);
+        sensorBottom.setAlignment(percent, Pos.BOTTOM_RIGHT);
+        vBox.getChildren().add(sensorBottom);
 
-        Text t = new Text("%");
-        t.getStyleClass().add("sensor-bottom");
-        bottomBox.getStyleClass().add("sensor-bottom");
-        bottomBox.getChildren().add(t);
-        pane.setBottom(bottomBox);
-
-        this.getChildren().add(pane);
+        this.getChildren().add(vBox);
     }
 
     public StringProperty valueProperty() {

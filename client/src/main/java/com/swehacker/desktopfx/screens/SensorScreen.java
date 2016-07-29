@@ -31,7 +31,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,10 +43,10 @@ public class SensorScreen implements Screen {
     private List<EventRepository.Event> events;
 
     @FXML
-    VBox sensorPanel;
+    LineChart sensor_chart;
 
     @FXML
-    LineChart sensor_chart;
+    Button backButton;
 
     public SensorScreen() {
         App.currentItemProperty().addListener(observable -> updateChart());
@@ -73,7 +73,7 @@ public class SensorScreen implements Screen {
     public void setScreenParent(ScreenController screenPage) {
         this.parent = screenPage;
 
-        sensorPanel.setOnMouseClicked(event -> parent.changeScreen(ScreenController.SCREEN.HOME));
+        backButton.setOnMouseClicked(event -> parent.changeScreen(ScreenController.SCREEN.HOME));
     }
 
     private String format(Date date) {

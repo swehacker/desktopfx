@@ -31,10 +31,22 @@ import com.swehacker.desktopfx.controls.Switch;
 import com.swehacker.desktopfx.controls.Temperature;
 import com.swehacker.desktopfx.openhab.OpenHABService;
 import javafx.fxml.FXML;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HomeScreen implements Screen {
+    private static Logger LOG = Logger.getLogger(HomeScreen.class.getName());
     private ScreenController parent;
+
+    @FXML
+    BorderPane mainPane;
+
+    @FXML
+    HBox headerPane;
 
     @FXML
     FlowPane switchPanel;
@@ -49,6 +61,7 @@ public class HomeScreen implements Screen {
     }
 
     public void init() {
+        switchPanel.prefWidthProperty().bind(this.parent.widthProperty().subtract(260));
         update();
     }
 
@@ -91,7 +104,7 @@ public class HomeScreen implements Screen {
                 }
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            LOG.log(Level.SEVERE, "Couldn't create items!", t);
         }
     }
 }
