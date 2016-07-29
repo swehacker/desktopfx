@@ -12,7 +12,7 @@ public class EventRestEndPoint {
     @Autowired
     EventRepository eventRepository;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public Iterable<Event> getAllEventsByTopic(@RequestParam("topic") String topic) {
         System.out.println(topic);
         return eventRepository.findByTopic(topic);

@@ -1,6 +1,6 @@
 package com.swehacker.desktopfx.server.legend;
 
-import com.swehacker.desktopfx.server.util.ClientIdUtil;
+import com.swehacker.desktopfx.server.util.NetworkInterfaceUtil;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class EventChangeListener implements MqttCallback {
     private static final Logger LOG = Logger.getLogger(EventChangeListener.class.getName());
-    private static final String CLIENT_ID = "desktopfx-server-" + ClientIdUtil.getId();
+    private static final String CLIENT_ID = "desktopfx-server-" + NetworkInterfaceUtil.getFirstMACAddress();
     private static final HashMap<String, Event> sensorEvents = new HashMap<>();
     private String serverURI;
     private String subscription;
