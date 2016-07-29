@@ -47,12 +47,21 @@ import java.util.logging.Logger;
 public class App extends Application {
     private static final Logger LOG = Logger.getLogger(App.class.getName());
     private static final ConsoleHandler CONSOLE_HANDLER = new ConsoleHandler();
+
     private static final String OPENHAB_SERVER_ADDRESS =    System.getProperty("openhab.server.address", "localhost");
     private static final String OPENHAB_SERVER_PORT =       System.getProperty("openhab.server.port", "8080");
     private static final String DESKTOPFX_SERVER_ADDRESS =  System.getProperty("desktopfx.server.address", "localhost");
     private static final String DESKTOPFX_SERVER_PORT =     System.getProperty("desktopfx.server.port", "8080");
     private static final String MQTT_SERVER_ADDRESS =       System.getProperty("mqtt.server.address", "tcp://localhost:1883");
     private static final String MQTT_SERVER_TOPIC =         System.getProperty("mqtt.server.topic", "/apartment/#");
+
+    private static final String OS_NAME = System.getProperty("ensemble.os.name", System.getProperty("os.name"));
+    private static final String OS_ARCH = System.getProperty("ensemble.os.arch", System.getProperty("os.arch"));
+    public static final boolean IS_IOS = "iOS".equals(OS_NAME) || "iOS Simulator".equals(OS_NAME);
+    public static final boolean IS_ANDROID = "android".equals(System.getProperty("javafx.platform")) || "Dalvik".equals(System.getProperty("java.vm.name"));
+    public static final boolean IS_EMBEDDED = "arm".equals(OS_ARCH) && !IS_IOS && !IS_ANDROID;
+    public static final boolean IS_DESKTOP = !IS_EMBEDDED && !IS_IOS && !IS_ANDROID;
+
     private static List<Item> items;
     private static OpenHABService openHABService;
     private static EventRepository eventRepository;

@@ -39,7 +39,7 @@ import java.util.List;
 
 public class SensorScreen implements Screen {
     private ScreenController parent;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00");
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:00");
     private List<EventRepository.Event> events;
 
     @FXML
@@ -58,7 +58,7 @@ public class SensorScreen implements Screen {
 
         xAxis.setLabel("Time");
         sensor_chart.getData().clear();
-        sensor_chart.setTitle("Sensor monitoring");
+        sensor_chart.setTitle("Hourly temperature in Celsius");
         XYChart.Series series = new XYChart.Series();
         series.setName(App.getCurrentItem().getName());
         events = App.getEventRepository().getEvents(App.getCurrentItem().getTopic());

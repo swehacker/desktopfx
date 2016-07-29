@@ -5,6 +5,7 @@ import javafx.beans.property.StringProperty;
 public interface Item {
     enum ItemType {
         SWITCH,
+        LAMP,
         TEMPERATURE,
         HUMIDITY
     }

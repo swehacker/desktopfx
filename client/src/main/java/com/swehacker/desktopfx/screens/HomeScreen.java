@@ -27,6 +27,7 @@ package com.swehacker.desktopfx.screens;
 import com.swehacker.desktopfx.App;
 import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.controls.Humidity;
+import com.swehacker.desktopfx.controls.Lamp;
 import com.swehacker.desktopfx.controls.Switch;
 import com.swehacker.desktopfx.controls.Temperature;
 import com.swehacker.desktopfx.openhab.OpenHABService;
@@ -81,6 +82,19 @@ public class HomeScreen implements Screen {
                     });
                     roomSwitch.valueProperty().bind(item.valueProperty());
                     switchPanel.getChildren().add(roomSwitch);
+                } else if (item.getType() == Item.ItemType.LAMP) {
+                    Lamp lampSwitch = new Lamp();
+                    lampSwitch.setName(item.getName());
+
+                    lampSwitch.setOnMouseClicked(event -> {
+                        if (lampSwitch.isOn()) {
+                            App.getOpenHABService().switchState(item.getLabel(), OpenHABService.STATE.OFF);
+                        } else {
+                            App.getOpenHABService().switchState(item.getLabel(), OpenHABService.STATE.ON);
+                        }
+                    });
+                    lampSwitch.valueProperty().bind(item.valueProperty());
+                    switchPanel.getChildren().add(lampSwitch);
                 } else if (item.getType() == Item.ItemType.TEMPERATURE) {
                     Temperature roomTemperature = new Temperature();
                     roomTemperature.setName(item.getName());

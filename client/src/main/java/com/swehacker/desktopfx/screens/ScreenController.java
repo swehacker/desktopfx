@@ -98,14 +98,29 @@ public class ScreenController extends StackPane {
      * played to show the new screen.
      */
     public void changeScreen(SCREEN screen) {
+        if (App.IS_DESKTOP) {
+            changeScreenAnimated(screen);
+        } else {
+            changeScreenNoAnimation(screen);
+        }
+    }
+
+    private void changeScreenNoAnimation(SCREEN screen) {
+        if (!getChildren().isEmpty()) {
+            getChildren().remove(0);
+            getChildren().add(0, screens.get(screen.name()));
+        } else {
+            getChildren().add(screens.get(screen.name()));
+        }
+    }
+
+    private void changeScreenAnimated(SCREEN screen) {
         final DoubleProperty opacity = opacityProperty();
 
-        //Is there is more than one screen
         if (!getChildren().isEmpty()) {
             Timeline fade = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
                     new KeyFrame(new Duration(250), event -> {
-                        //remove displayed screen
                         getChildren().remove(0);
                         getChildren().add(0, screens.get(screen.name()));
                         Timeline fadeIn = new Timeline(
@@ -115,7 +130,6 @@ public class ScreenController extends StackPane {
                     }, new KeyValue(opacity, 0.0)));
             fade.play();
         } else {
-            //no one else been displayed, then just show
             setOpacity(0.0);
             getChildren().add(screens.get(screen.name()));
             Timeline fadeIn = new Timeline(

@@ -63,6 +63,8 @@ public class ConfigurationItem implements Item {
         checkIfEmpty(type);
         if (type.equalsIgnoreCase("Switch")) {
             this.type = ItemType.SWITCH;
+        } else if (type.equalsIgnoreCase("Lamp") ) {
+            this.type = ItemType.LAMP;
         } else if (type.equalsIgnoreCase("Temperature")) {
             this.type = ItemType.TEMPERATURE;
         } else if (type.equalsIgnoreCase("Humidity")) {

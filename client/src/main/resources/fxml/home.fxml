@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="mainPane" fx:controller="com.swehacker.desktopfx.screens.HomeScreen" xmlns:fx="http://javafx.com/fxml/1">
-        <top>
-            <HBox fx:id="headerPane"></HBox>
-        </top>
-        <center>
-            <HBox fx:id="itemPanel" xmlns="http://javafx.com/javafx/8">
-                <children>
-                    <FlowPane fx:id="switchPanel" hgap="5.0" vgap="5.0">
-                    </FlowPane>
-                    <FlowPane fx:id="sensorPanel" hgap="5.0" vgap="5.0">
-                    </FlowPane>
-                </children>
-            </HBox>
-        </center>
+<?import javafx.scene.text.Text?>
+<BorderPane fx:id="mainPane" fx:controller="com.swehacker.desktopfx.screens.HomeScreen"
+            xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <HBox fx:id="headerPane" alignment="CENTER">
+            <children>
+                <Text styleClass="header-text">DesktopFx - Home Automation Controller</Text>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <HBox fx:id="itemPanel" xmlns="http://javafx.com/javafx/8">
+            <children>
+                <FlowPane fx:id="switchPanel" hgap="5.0" vgap="5.0">
+                </FlowPane>
+                <FlowPane fx:id="sensorPanel" hgap="5.0" vgap="5.0">
+                </FlowPane>
+            </children>
+        </HBox>
+    </center>
 </BorderPane>

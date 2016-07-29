@@ -100,10 +100,15 @@ public class PropertiesConfiguration {
         item.setName(prop.getProperty(key + ".name"));
         item.setRoom(prop.getProperty(key + ".group"));
         item.setType(prop.getProperty(key + ".type"));
-        if ( item.getType() == Item.ItemType.SWITCH ) {
-            item.setValue(App.getOpenHABService().getSwitchState(item.getLabel()).name());
-        } else {
-            item.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
+        try {
+            if (item.getType() == Item.ItemType.SWITCH) {
+                item.setValue(App.getOpenHABService().getSwitchState(item.getLabel()).name());
+            } else {
+                item.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
+            }
+        } catch (Throwable t) {
+            item.setValue("");
+            LOG.warning("Couldn't retrieve current status of " + item.getName());
         }
 
         LOG.info(item.getTopic() + ": " + item.getValue());
