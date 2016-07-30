@@ -45,6 +45,10 @@ public class ItemChangedListener implements MqttCallback {
     @Override
     public void connectionLost(Throwable cause) {
         LOG.info(cause.getMessage());
+        LOG.info("Restarting...");
+        stop();
+        start();
+        LOG.info("Restarted...");
     }
 
     @Override
