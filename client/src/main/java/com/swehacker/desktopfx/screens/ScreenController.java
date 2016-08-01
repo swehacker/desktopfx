@@ -98,7 +98,7 @@ public class ScreenController extends StackPane {
      * played to show the new screen.
      */
     public void changeScreen(SCREEN screen) {
-        if (App.IS_DESKTOP) {
+        if (App.getSystemCapabilities().isDesktop()) {
             changeScreenAnimated(screen);
         } else {
             changeScreenNoAnimation(screen);

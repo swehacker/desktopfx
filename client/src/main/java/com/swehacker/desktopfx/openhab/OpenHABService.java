@@ -24,7 +24,7 @@
 
 package com.swehacker.desktopfx.openhab;
 
-import com.swehacker.desktopfx.configuration.Item;
+import com.swehacker.desktopfx.ha.Accessory;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -35,7 +35,7 @@ import java.util.Properties;
 public class OpenHABService {
     private static final Properties labels = new Properties();
     private final Client client;
-    private List<Item> items;
+    private List<Accessory> items;
     private String _restURL;
 
     public enum STATE {

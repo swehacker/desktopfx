@@ -24,11 +24,15 @@
 
 package com.swehacker.desktopfx;
 
-import com.swehacker.desktopfx.configuration.Item;
-import com.swehacker.desktopfx.configuration.PropertiesConfiguration;
+import com.swehacker.desktopfx.ha.Accessory;
+import com.swehacker.desktopfx.configuration.AccessoryConfiguration;
+import com.swehacker.desktopfx.ha.Home;
+import com.swehacker.desktopfx.configuration.SystemCapabilities;
 import com.swehacker.desktopfx.events.EventRepository;
-import com.swehacker.desktopfx.openhab.ItemChangedListener;
+import com.swehacker.desktopfx.events.EventRepositoryConfiguration;
+import com.swehacker.desktopfx.openhab.AccessoryChangedListener;
 import com.swehacker.desktopfx.openhab.OpenHABService;
+import com.swehacker.desktopfx.openhab.OpenHabServiceConfiguration;
 import com.swehacker.desktopfx.screens.ScreenController;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
@@ -39,7 +43,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,28 +50,16 @@ import java.util.logging.Logger;
 public class App extends Application {
     private static final Logger LOG = Logger.getLogger(App.class.getName());
     private static final ConsoleHandler CONSOLE_HANDLER = new ConsoleHandler();
+    private static SimpleObjectProperty<Accessory> currentItem = new SimpleObjectProperty<>();
 
-    private static final String OPENHAB_SERVER_ADDRESS =    System.getProperty("openhab.server.address", "localhost");
-    private static final String OPENHAB_SERVER_PORT =       System.getProperty("openhab.server.port", "8080");
-    private static final String DESKTOPFX_SERVER_ADDRESS =  System.getProperty("desktopfx.server.address", "localhost");
-    private static final String DESKTOPFX_SERVER_PORT =     System.getProperty("desktopfx.server.port", "8080");
-    private static final String MQTT_SERVER_ADDRESS =       System.getProperty("mqtt.server.address", "tcp://localhost:1883");
-    private static final String MQTT_SERVER_TOPIC =         System.getProperty("mqtt.server.topic", "/apartment/#");
-
-    private static final String OS_NAME = System.getProperty("ensemble.os.name", System.getProperty("os.name"));
-    private static final String OS_ARCH = System.getProperty("ensemble.os.arch", System.getProperty("os.arch"));
-    public static final boolean IS_IOS = "iOS".equals(OS_NAME) || "iOS Simulator".equals(OS_NAME);
-    public static final boolean IS_ANDROID = "android".equals(System.getProperty("javafx.platform")) || "Dalvik".equals(System.getProperty("java.vm.name"));
-    public static final boolean IS_EMBEDDED = "arm".equals(OS_ARCH) && !IS_IOS && !IS_ANDROID;
-    public static final boolean IS_DESKTOP = !IS_EMBEDDED && !IS_IOS && !IS_ANDROID;
-
-    private static List<Item> items;
-    private static OpenHABService openHABService;
-    private static EventRepository eventRepository;
-    private ItemChangedListener listener;
     private ScreenController screenController = new ScreenController();
     private Scene scene;
-    private static SimpleObjectProperty<Item> currentItem = new SimpleObjectProperty<>();
+
+    private static Home myHome;
+    private static AccessoryChangedListener accessoryChangedListener;
+    private static EventRepository eventRepository;
+    private static OpenHABService openHABService;
+    private static SystemCapabilities systemCapabilities;
 
     @Override
     public void init() {
@@ -76,22 +67,16 @@ public class App extends Application {
         LOG.setLevel(Level.ALL);
         LOG.addHandler(CONSOLE_HANDLER);
 
-        LOG.config("OPENHAB SERVER: " + OPENHAB_SERVER_ADDRESS + ":" + OPENHAB_SERVER_PORT);
-        LOG.config("DESKTOPFX SERVER: " + DESKTOPFX_SERVER_ADDRESS + ":" + DESKTOPFX_SERVER_PORT);
-        LOG.config("MQTT SERVER: " + MQTT_SERVER_ADDRESS + MQTT_SERVER_TOPIC);
-
-        openHABService = new OpenHABService(OPENHAB_SERVER_ADDRESS, Integer.parseInt(OPENHAB_SERVER_PORT));
-        eventRepository = new EventRepository(DESKTOPFX_SERVER_ADDRESS, Integer.parseInt(DESKTOPFX_SERVER_PORT));
-        items = new PropertiesConfiguration().getConfig();
-        listener = new ItemChangedListener(MQTT_SERVER_ADDRESS, MQTT_SERVER_TOPIC);
-
-        screenController.loadScreens();
-        screenController.changeScreen(ScreenController.SCREEN.HOME);
+        systemCapabilities = new SystemCapabilities();
+        openHABService = OpenHabServiceConfiguration.getOpenHABService();
+        myHome = AccessoryConfiguration.getHome();
+        accessoryChangedListener = EventRepositoryConfiguration.getAccessoryChangedListener();
+        eventRepository = EventRepositoryConfiguration.getEventRepository();
     }
 
     @Override
     public void stop() throws Exception {
-        listener.stop();
+        accessoryChangedListener.stop();
         super.stop();
     }
 
@@ -101,7 +86,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        listener.start();
+        screenController.loadScreens();
+        screenController.changeScreen(ScreenController.SCREEN.HOME);
+
+        accessoryChangedListener.start();
 
         // CREATE SCENE
         BorderPane root = new BorderPane();
@@ -131,33 +119,36 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    /**
-     * Gets all the configured items (OpenHAB objects)
-     *
-     * @return Items in a list.
-     */
-    public static List<Item> getItems() {
-        return items;
+    public static void setCurrentItem(Accessory currentAccessory) {
+        App.currentItem.set(currentAccessory);
     }
 
-    public static OpenHABService getOpenHABService() {
-        return openHABService;
+    public static Accessory getCurrentItem() {
+        return currentItem.get();
+    }
+
+    public static SimpleObjectProperty<Accessory> currentItemProperty() {
+        return currentItem;
+    }
+
+    public static Home getMyHome() {
+        return myHome;
+    }
+
+    public static AccessoryChangedListener getAccessoryChangedListener() {
+        return accessoryChangedListener;
     }
 
     public static EventRepository getEventRepository() {
         return eventRepository;
     }
 
-    public static void setCurrentItem(Item currentItem) {
-        App.currentItem.set(currentItem);
+    public static OpenHABService getOpenHABService() {
+        return openHABService;
     }
 
-    public static Item getCurrentItem() {
-        return currentItem.get();
-    }
-
-    public static SimpleObjectProperty<Item> currentItemProperty() {
-        return currentItem;
+    public static SystemCapabilities getSystemCapabilities() {
+        return systemCapabilities;
     }
 
     /**

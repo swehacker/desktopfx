@@ -1,9 +1,9 @@
-package com.swehacker.desktopfx.configuration;
+package com.swehacker.desktopfx.ha;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class ConfigurationItem implements Item {
+public class Accessory {
     private String name;
     private String label;
     private String topic;
@@ -11,31 +11,31 @@ public class ConfigurationItem implements Item {
     private ItemType type;
     private StringProperty value = new SimpleStringProperty();
 
-    ConfigurationItem() {
-
+    public enum ItemType {
+        SWITCH,
+        LAMP,
+        TEMPERATURE,
+        HUMIDITY
     }
 
-    @Override
+    public Accessory() { }
+
     public String getTopic() {
         return topic;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getRoom() {
         return room;
     }
 
-    @Override
     public ItemType getType() {
         return type;
     }
 
-    @Override
     public String getLabel() {
         return label;
     }
@@ -44,22 +44,22 @@ public class ConfigurationItem implements Item {
         this.label = label;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         checkIfEmpty(name);
         this.name = name;
     }
 
-    void setTopic(String topic) {
+    public void setTopic(String topic) {
         checkIfEmpty(topic);
         this.topic = topic;
     }
 
-    void setRoom(String room) {
+    public void setRoom(String room) {
         checkIfEmpty(room);
         this.room = room;
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         checkIfEmpty(type);
         if (type.equalsIgnoreCase("Switch")) {
             this.type = ItemType.SWITCH;
@@ -74,7 +74,7 @@ public class ConfigurationItem implements Item {
         }
     }
 
-    void setType(ItemType type) {
+    public void setType(ItemType type) {
         this.type = type;
     }
 
