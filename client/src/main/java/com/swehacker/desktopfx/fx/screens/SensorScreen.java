@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.swehacker.desktopfx.screens;
+package com.swehacker.desktopfx.fx.screens;
 
 import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.events.EventRepository;
+import com.swehacker.desktopfx.server.history.EventRepository;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;

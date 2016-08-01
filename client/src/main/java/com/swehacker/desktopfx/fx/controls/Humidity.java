@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.swehacker.desktopfx.controls;
+package com.swehacker.desktopfx.fx.controls;
 
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.swehacker.desktopfx.screens;
+package com.swehacker.desktopfx.fx.screens;
 
 import com.swehacker.desktopfx.App;
 import javafx.animation.KeyFrame;
@@ -98,7 +98,7 @@ public class ScreenController extends StackPane {
      * played to show the new screen.
      */
     public void changeScreen(SCREEN screen) {
-        if (App.IS_DESKTOP) {
+        if (App.getSystemCapabilities().isDesktop()) {
             changeScreenAnimated(screen);
         } else {
             changeScreenNoAnimation(screen);

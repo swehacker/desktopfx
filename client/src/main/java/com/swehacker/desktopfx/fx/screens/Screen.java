@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.swehacker.desktopfx.screens;
+package com.swehacker.desktopfx.fx.screens;
 
 public interface Screen {
     void setScreenParent(ScreenController screenPage);

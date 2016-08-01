@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.swehacker.desktopfx.controls;
+package com.swehacker.desktopfx.fx.controls;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -32,24 +32,24 @@ import javafx.scene.layout.VBox;
 
 import java.util.logging.Logger;
 
-public class Switch extends ItemController {
+public class Lamp extends ItemController {
     private static final Logger LOG = Logger.getLogger(ItemController.class.toString());
     private boolean on = false;
     private final StringProperty value = new SimpleStringProperty("");
     private final StackPane iconPane = new StackPane();
     private final VBox vBox = new VBox();
 
-    public Switch() {
+    public Lamp() {
         vBox.setAlignment(Pos.CENTER);
-        vBox.getStyleClass().addAll("switch", "switch-off");
+        vBox.getStyleClass().addAll("lamp", "lamp-off");
 
         StackPane titlePane = new StackPane();
-        titlePane.getStyleClass().add("switch-icon");
-        title.getStyleClass().addAll("switch-title");
+        titlePane.getStyleClass().add("lamp-icon");
+        title.getStyleClass().addAll("lamp-title");
         titlePane.setAlignment(title, Pos.CENTER);
         titlePane.getChildren().add(title);
 
-        iconPane.getStyleClass().addAll("switch-icon-off");
+        iconPane.getStyleClass().addAll("lamp-icon-off");
 
         vBox.getChildren().addAll(title, iconPane);
 
@@ -68,18 +68,18 @@ public class Switch extends ItemController {
 
     public void turnOn() {
         on = true;
-        vBox.getStyleClass().add("switch-on");
-        vBox.getStyleClass().remove("switch-off");
-        iconPane.getStyleClass().add("switch-icon-on");
+        vBox.getStyleClass().add("lamp-on");
+        vBox.getStyleClass().remove("lamp-off");
+        iconPane.getStyleClass().add("lamp-icon-on");
         iconPane.getStyleClass().remove("switch-icon-off");
     }
 
     public void turnOff() {
         on = false;
-        vBox.getStyleClass().add("switch-off");
-        vBox.getStyleClass().remove("switch-on");
-        iconPane.getStyleClass().add("switch-icon-off");
-        iconPane.getStyleClass().remove("switch-icon-on");
+        vBox.getStyleClass().add("lamp-off");
+        vBox.getStyleClass().remove("lamp-on");
+        iconPane.getStyleClass().add("lamp-icon-off");
+        iconPane.getStyleClass().remove("lamp-icon-on");
     }
 
     public String getValue() {

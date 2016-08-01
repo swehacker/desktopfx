@@ -1,4 +1,4 @@
-package com.swehacker.desktopfx.events;
+package com.swehacker.desktopfx.server.history;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

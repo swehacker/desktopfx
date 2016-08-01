@@ -1,4 +1,4 @@
-package com.swehacker.desktopfx.controls;
+package com.swehacker.desktopfx.fx.controls;
 
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;

@@ -1,7 +1,6 @@
 package com.swehacker.desktopfx.openhab;
 
 import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.configuration.Item;
 import com.swehacker.desktopfx.util.NetworkInterfaceUtil;
 import javafx.application.Platform;
 import org.eclipse.paho.client.mqttv3.*;
@@ -10,14 +9,14 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ItemChangedListener implements MqttCallback {
-    private static final Logger LOG = Logger.getLogger(ItemChangedListener.class.getName());
+public class AccessoryChangedListener implements MqttCallback {
+    private static final Logger LOG = Logger.getLogger(AccessoryChangedListener.class.getName());
     private static final String CLIENT_ID = "desktopfx-" + NetworkInterfaceUtil.getFirstMACAddress();
     private String serverURI;
     private String subscription;
     private MqttClient client;
 
-    public ItemChangedListener(String serverURI, String subscription) {
+    public AccessoryChangedListener(String serverURI, String subscription) {
         this.serverURI = serverURI;
         this.subscription = subscription;
     }
@@ -54,11 +53,12 @@ public class ItemChangedListener implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Platform.runLater(() -> {
-            for (Item item : App.getItems()) {
-                if (topic.equalsIgnoreCase(item.getTopic())) {
-                    item.setValue(message.toString());
+            App.getMyHome().getAccessories().forEachRemaining(accessory -> {
+                if ( topic.equalsIgnoreCase(accessory.getTopic()) ) {
+                    accessory.setValue(message.toString());
+                    return;
                 }
-            }
+            });
         });
     }
 
