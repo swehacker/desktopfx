@@ -21,7 +21,7 @@ public class AccessoryEndPoint {
         return accessoryConfiguration.getHome().getAccessories();
     }
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
     public void setValue(@PathVariable String name, @RequestParam String state) {
         openHABService.switchState(name, OpenHABService.STATE.convert(state));
     }
