@@ -24,16 +24,13 @@
 
 package com.swehacker.desktopfx;
 
-import com.swehacker.desktopfx.ha.Accessory;
-import com.swehacker.desktopfx.configuration.AccessoryConfiguration;
-import com.swehacker.desktopfx.ha.Home;
 import com.swehacker.desktopfx.configuration.SystemCapabilities;
-import com.swehacker.desktopfx.server.history.EventRepository;
-import com.swehacker.desktopfx.server.history.EventRepositoryConfiguration;
-import com.swehacker.desktopfx.openhab.AccessoryChangedListener;
-import com.swehacker.desktopfx.openhab.OpenHABService;
-import com.swehacker.desktopfx.openhab.OpenHabServiceConfiguration;
 import com.swehacker.desktopfx.fx.screens.ScreenController;
+import com.swehacker.desktopfx.ha.Accessory;
+import com.swehacker.desktopfx.ha.Home;
+import com.swehacker.desktopfx.server.AccessoryChangeListener;
+import com.swehacker.desktopfx.server.DfxService;
+import com.swehacker.desktopfx.server.ServerConfiguration;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
@@ -55,11 +52,10 @@ public class App extends Application {
     private ScreenController screenController = new ScreenController();
     private Scene scene;
 
-    private static Home myHome;
-    private static AccessoryChangedListener accessoryChangedListener;
-    private static EventRepository eventRepository;
-    private static OpenHABService openHABService;
+    private static AccessoryChangeListener accessoryChangeListener;
+    private static DfxService dfxService;
     private static SystemCapabilities systemCapabilities;
+    private static Home myHome;
 
     @Override
     public void init() {
@@ -68,15 +64,14 @@ public class App extends Application {
         LOG.addHandler(CONSOLE_HANDLER);
 
         systemCapabilities = new SystemCapabilities();
-        openHABService = OpenHabServiceConfiguration.getOpenHABService();
-        myHome = AccessoryConfiguration.getHome();
-        accessoryChangedListener = EventRepositoryConfiguration.getAccessoryChangedListener();
-        eventRepository = EventRepositoryConfiguration.getEventRepository();
+        dfxService = ServerConfiguration.getService();
+        myHome = dfxService.getAccessories();
+        accessoryChangeListener = ServerConfiguration.getAccessoryChangedListener();
     }
 
     @Override
     public void stop() throws Exception {
-        accessoryChangedListener.stop();
+        accessoryChangeListener.stop();
         super.stop();
     }
 
@@ -89,7 +84,7 @@ public class App extends Application {
         screenController.loadScreens();
         screenController.changeScreen(ScreenController.SCREEN.HOME);
 
-        accessoryChangedListener.start();
+        accessoryChangeListener.start();
 
         // CREATE SCENE
         BorderPane root = new BorderPane();
@@ -135,16 +130,12 @@ public class App extends Application {
         return myHome;
     }
 
-    public static AccessoryChangedListener getAccessoryChangedListener() {
-        return accessoryChangedListener;
+    public static AccessoryChangeListener getAccessoryChangeListener() {
+        return accessoryChangeListener;
     }
 
-    public static EventRepository getEventRepository() {
-        return eventRepository;
-    }
-
-    public static OpenHABService getOpenHABService() {
-        return openHABService;
+    public static DfxService getDxfService() {
+        return dfxService;
     }
 
     public static SystemCapabilities getSystemCapabilities() {

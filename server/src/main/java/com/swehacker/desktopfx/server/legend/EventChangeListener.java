@@ -4,15 +4,21 @@ import com.swehacker.desktopfx.server.util.NetworkInterfaceUtil;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EventChangeListener implements MqttCallback {
+@Service
+public class EventChangeListener implements MqttCallback, ApplicationListener<ApplicationReadyEvent> {
     private static final Logger LOG = Logger.getLogger(EventChangeListener.class.getName());
+    private static final String MQTT_SERVER_ADDRESS = System.getProperty("mqtt.server.address", "tcp://localhost:1883");
+    private static final String MQTT_SERVER_TOPIC = System.getProperty("mqtt.server.topic", "/#");
     private static final String CLIENT_ID = "desktopfx-server-" + NetworkInterfaceUtil.getFirstMACAddress();
     private static final HashMap<String, Event> sensorEvents = new HashMap<>();
     private String serverURI;
@@ -22,9 +28,9 @@ public class EventChangeListener implements MqttCallback {
     @Autowired
     EventRepository eventRepository;
 
-    public EventChangeListener(String serverURI, String subscription) {
-        this.serverURI = serverURI;
-        this.subscription = subscription;
+    public EventChangeListener() {
+        this.serverURI = MQTT_SERVER_ADDRESS;
+        this.subscription = MQTT_SERVER_TOPIC;
     }
 
     public void start() {
@@ -83,5 +89,11 @@ public class EventChangeListener implements MqttCallback {
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
         LOG.info(token.toString());
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        LOG.info("Starting Event Change Listener");
+        start();
     }
 }

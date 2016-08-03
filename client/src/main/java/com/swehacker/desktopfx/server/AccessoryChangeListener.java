@@ -1,4 +1,4 @@
-package com.swehacker.desktopfx.openhab;
+package com.swehacker.desktopfx.server;
 
 import com.swehacker.desktopfx.App;
 import com.swehacker.desktopfx.util.NetworkInterfaceUtil;
@@ -9,20 +9,21 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AccessoryChangedListener implements MqttCallback {
-    private static final Logger LOG = Logger.getLogger(AccessoryChangedListener.class.getName());
+public class AccessoryChangeListener implements MqttCallback {
+    private static final Logger LOG = Logger.getLogger(AccessoryChangeListener.class.getName());
     private static final String CLIENT_ID = "desktopfx-" + NetworkInterfaceUtil.getFirstMACAddress();
     private String serverURI;
     private String subscription;
     private MqttClient client;
 
-    public AccessoryChangedListener(String serverURI, String subscription) {
+    public AccessoryChangeListener(String serverURI, String subscription) {
         this.serverURI = serverURI;
         this.subscription = subscription;
     }
 
     public void start() {
         try {
+            LOG.info("Connect to the MQTT Server " + serverURI );
             client = new MqttClient(serverURI, CLIENT_ID, new MemoryPersistence());
             client.connect();
             client.setCallback(this);
@@ -34,6 +35,7 @@ public class AccessoryChangedListener implements MqttCallback {
 
     public void stop() {
         try {
+            LOG.info("Disconnecting from the MQTT Server " + serverURI );
             client.disconnect();
             client.close();
         } catch (MqttException mqttException) {

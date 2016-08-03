@@ -25,7 +25,7 @@
 package com.swehacker.desktopfx.fx.screens;
 
 import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.server.history.EventRepository;
+import com.swehacker.desktopfx.server.DfxService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -40,7 +40,7 @@ import java.util.List;
 public class SensorScreen implements Screen {
     private ScreenController parent;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:00");
-    private List<EventRepository.Event> events;
+    private List<DfxService.Event> events;
 
     @FXML
     LineChart sensor_chart;
@@ -61,8 +61,8 @@ public class SensorScreen implements Screen {
         sensor_chart.setTitle("Hourly temperature in Celsius");
         XYChart.Series series = new XYChart.Series();
         series.setName(App.getCurrentItem().getName());
-        events = App.getEventRepository().getEvents(App.getCurrentItem().getTopic());
-        for (EventRepository.Event event : events) {
+        events = App.getDxfService().getEvents(App.getCurrentItem().getTopic());
+        for (DfxService.Event event : events) {
             series.getData().add(new XYChart.Data<>(format(event.time), event.value));
         }
 

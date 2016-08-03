@@ -1,8 +1,9 @@
 package com.swehacker.desktopfx.ha;
 
-import com.swehacker.desktopfx.exceptions.RoomNotFoundException;
+import com.swehacker.desktopfx.ha.exceptions.RoomNotFoundException;
 
 import java.util.Iterator;
+import java.util.List;
 
 public interface Home {
     /**
@@ -33,6 +34,25 @@ public interface Home {
      * Returns all rooms that belongs to this house.
      */
     Iterator<Room> getRooms();
+
+    /**
+     * Add an accessory to the configured room
+     *
+     * @param accessory
+     */
+    void addAccessory(Accessory accessory);
+
+    /**
+     * Add new accessories which will add every accessory to specific room
+     * @param newAccessories
+     */
+    void addAccessories(List<Accessory> newAccessories);
+
+    /**
+     * Add new accessories which will add every accessory to specific room
+     * @param newAccessories
+     */
+    void addAccessories(Iterator<Accessory> newAccessories);
 
     /**
      * Returns all accessories in all rooms;

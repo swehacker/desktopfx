@@ -25,12 +25,12 @@
 package com.swehacker.desktopfx.fx.screens;
 
 import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.ha.Accessory;
 import com.swehacker.desktopfx.fx.controls.Humidity;
 import com.swehacker.desktopfx.fx.controls.Lamp;
 import com.swehacker.desktopfx.fx.controls.Switch;
 import com.swehacker.desktopfx.fx.controls.Temperature;
-import com.swehacker.desktopfx.openhab.OpenHABService;
+import com.swehacker.desktopfx.ha.Accessory;
+import com.swehacker.desktopfx.server.DfxService;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -70,37 +70,36 @@ public class HomeScreen implements Screen {
     private void update() {
         try {
             ArrayList<Accessory> accessories = new ArrayList<>();
-            System.out.println(App.getOpenHABService().getSwitchState("WANHAO_4S"));
             App.getMyHome().getAccessories().forEachRemaining(accessories::add);
 
             for (Accessory accessory : accessories ) {
-                if (accessory.getType() == Accessory.ItemType.SWITCH) {
+                if (accessory.getType() == Accessory.Type.SWITCH) {
                     Switch roomSwitch = new Switch();
                     roomSwitch.setName(accessory.getName());
 
                     roomSwitch.setOnMouseClicked(event -> {
                         if (roomSwitch.isOn()) {
-                            App.getOpenHABService().switchState(accessory.getLabel(), OpenHABService.STATE.OFF);
+                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.OFF);
                         } else {
-                            App.getOpenHABService().switchState(accessory.getLabel(), OpenHABService.STATE.ON);
+                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.ON);
                         }
                     });
                     roomSwitch.valueProperty().bind(accessory.valueProperty());
                     switchPanel.getChildren().add(roomSwitch);
-                } else if (accessory.getType() == Accessory.ItemType.LAMP) {
+                } else if (accessory.getType() == Accessory.Type.LAMP) {
                     Lamp lampSwitch = new Lamp();
                     lampSwitch.setName(accessory.getName());
 
                     lampSwitch.setOnMouseClicked(event -> {
                         if (lampSwitch.isOn()) {
-                            App.getOpenHABService().switchState(accessory.getLabel(), OpenHABService.STATE.OFF);
+                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.OFF);
                         } else {
-                            App.getOpenHABService().switchState(accessory.getLabel(), OpenHABService.STATE.ON);
+                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.ON);
                         }
                     });
                     lampSwitch.valueProperty().bind(accessory.valueProperty());
                     switchPanel.getChildren().add(lampSwitch);
-                } else if (accessory.getType() == Accessory.ItemType.TEMPERATURE) {
+                } else if (accessory.getType() == Accessory.Type.TEMPERATURE) {
                     Temperature roomTemperature = new Temperature();
                     roomTemperature.setName(accessory.getName());
                     roomTemperature.valueProperty().bind(accessory.valueProperty());
@@ -108,9 +107,8 @@ public class HomeScreen implements Screen {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
                         App.setCurrentItem(accessory);
                     });
-                    accessory.setValue(App.getOpenHABService().getSensorValue(accessory.getLabel()));
                     sensorPanel.getChildren().add(roomTemperature);
-                } else if (accessory.getType() == Accessory.ItemType.HUMIDITY) {
+                } else if (accessory.getType() == Accessory.Type.HUMIDITY) {
                     Humidity humidity = new Humidity();
                     humidity.setName(accessory.getName());
                     humidity.valueProperty().bind(accessory.valueProperty());
@@ -118,7 +116,6 @@ public class HomeScreen implements Screen {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
                         App.setCurrentItem(accessory);
                     });
-                    accessory.setValue(App.getOpenHABService().getSensorValue(accessory.getLabel()));
                     sensorPanel.getChildren().add(humidity);
                 }
             }

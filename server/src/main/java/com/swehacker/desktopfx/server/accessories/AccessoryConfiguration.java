@@ -1,40 +1,30 @@
-package com.swehacker.desktopfx.configuration;
+package com.swehacker.desktopfx.server.accessories;
 
-import com.swehacker.desktopfx.App;
-import com.swehacker.desktopfx.exceptions.RoomNotFoundException;
 import com.swehacker.desktopfx.ha.Accessory;
 import com.swehacker.desktopfx.ha.Home;
 import com.swehacker.desktopfx.ha.MyHome;
-import com.swehacker.desktopfx.ha.Room;
+import com.swehacker.desktopfx.server.openhab.OpenHABService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.logging.Logger;
 
-public abstract class AccessoryConfiguration {
+@Service
+public class AccessoryConfiguration {
     private static final Logger LOG = Logger.getLogger(AccessoryConfiguration.class.getName());
 
-    public static Home getHome() {
+    @Autowired
+    private OpenHABService openHABService;
+
+    public Home getHome() {
         MyHome home = new MyHome();
-
-        for ( Accessory accessory : getConfig() ) {
-            String roomName = accessory.getRoom();
-            Room room;
-            try {
-                room = home.getRoom(roomName);
-            } catch (RoomNotFoundException rnfe) {
-                LOG.info("Adding new room " + roomName);
-                room = home.createRoom(roomName);
-            }
-
-            room.addAccessory(accessory);
-            home.addRoom(room);
-        }
-
+        home.addAccessories(getConfig());
         return home;
     }
 
-    private static List<Accessory> getConfig() {
+    private List<Accessory> getConfig() {
         Properties prop = new Properties();
         ArrayList<Accessory> accessories = new ArrayList<>();
 
@@ -44,7 +34,7 @@ public abstract class AccessoryConfiguration {
         return accessories;
     }
 
-    private static void readConfig(Properties prop, List<Accessory> accessories) {
+    private void readConfig(Properties prop, List<Accessory> accessories) {
         HashSet<String> keys = new HashSet<>();
         try {
             InputStreamReader is = new InputStreamReader(AccessoryConfiguration.class.getClassLoader().getResourceAsStream("config.properties"), "UTF-8");
@@ -64,26 +54,23 @@ public abstract class AccessoryConfiguration {
         }
     }
 
-    private static Accessory get(Properties prop, String key) {
+    private Accessory get(Properties prop, String key) {
         Accessory item = new Accessory();
         item.setTopic(prop.getProperty(key + ".topic"));
         item.setLabel(prop.getProperty(key + ".label"));
         item.setName(prop.getProperty(key + ".name"));
         item.setRoom(prop.getProperty(key + ".group"));
-        item.setType(prop.getProperty(key + ".type"));
+        item.setTypeByString(prop.getProperty(key + ".type"));
         try {
-            if (item.getType() == Accessory.ItemType.SWITCH) {
-                item.setValue(App.getOpenHABService().getSwitchState(item.getLabel()).name());
+            if (item.getType() == Accessory.Type.SWITCH) {
+                item.setValue(openHABService.getSwitchState(item.getLabel()).name());
             } else {
-                item.setValue(App.getOpenHABService().getSensorValue(item.getLabel()));
+                item.setValue(openHABService.getSensorValue(item.getLabel()));
             }
         } catch (Throwable t) {
             item.setValue("");
             LOG.warning("Couldn't retrieve current status of " + item.getName());
         }
-
-        LOG.info(item.getTopic() + ": " + item.getValue());
-
 
         return item;
     }

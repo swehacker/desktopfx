@@ -1,4 +1,4 @@
-package com.swehacker.desktopfx.exceptions;
+package com.swehacker.desktopfx.ha.exceptions;
 
 public class RoomNotFoundException extends RuntimeException {
     public RoomNotFoundException() {

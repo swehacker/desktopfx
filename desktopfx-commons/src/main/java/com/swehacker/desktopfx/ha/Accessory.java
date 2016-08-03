@@ -4,19 +4,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Accessory {
-    private String name;
-    private String label;
-    private String topic;
-    private String room;
-    private ItemType type;
-    private StringProperty value = new SimpleStringProperty();
-
-    public enum ItemType {
+    public enum Type {
         SWITCH,
         LAMP,
         TEMPERATURE,
         HUMIDITY
     }
+
+    private String name;
+    private String label;
+    private String topic;
+    private String room;
+    private Type type;
+    private StringProperty value = new SimpleStringProperty();
 
     public Accessory() { }
 
@@ -32,7 +32,7 @@ public class Accessory {
         return room;
     }
 
-    public ItemType getType() {
+    public Type getType() {
         return type;
     }
 
@@ -59,22 +59,22 @@ public class Accessory {
         this.room = room;
     }
 
-    public void setType(String type) {
+    public void setTypeByString(String type) {
         checkIfEmpty(type);
         if (type.equalsIgnoreCase("Switch")) {
-            this.type = ItemType.SWITCH;
+            this.type = Type.SWITCH;
         } else if (type.equalsIgnoreCase("Lamp") ) {
-            this.type = ItemType.LAMP;
+            this.type = Type.LAMP;
         } else if (type.equalsIgnoreCase("Temperature")) {
-            this.type = ItemType.TEMPERATURE;
+            this.type = Type.TEMPERATURE;
         } else if (type.equalsIgnoreCase("Humidity")) {
-            this.type = ItemType.HUMIDITY;
+            this.type = Type.HUMIDITY;
         } else {
             throw new IllegalArgumentException("Configuration of type is wrong");
         }
     }
 
-    public void setType(ItemType type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

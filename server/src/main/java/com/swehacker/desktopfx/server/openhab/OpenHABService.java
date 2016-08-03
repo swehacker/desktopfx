@@ -22,21 +22,22 @@
  * SOFTWARE.
  */
 
-package com.swehacker.desktopfx.openhab;
+package com.swehacker.desktopfx.server.openhab;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.swehacker.desktopfx.ha.Accessory;
+import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Properties;
 
+@Service
 public class OpenHABService {
-    private static final Properties labels = new Properties();
+    private static final String OPENHAB_SERVER_ADDRESS =    System.getProperty("openhab.server.address", "localhost");
+    private static final String OPENHAB_SERVER_PORT =       System.getProperty("openhab.server.port", "8080");
+
     private final Client client;
-    private List<Accessory> items;
     private String _restURL;
 
     public enum STATE {
@@ -60,8 +61,8 @@ public class OpenHABService {
         }
     }
 
-    public OpenHABService(final String ip, final int port) {
-        _restURL = "http://" + ip + ":" + port + "/rest";
+    public OpenHABService() {
+        _restURL = "http://" + OPENHAB_SERVER_ADDRESS + ":" + OPENHAB_SERVER_PORT + "/rest";
         client = ClientBuilder.newBuilder()
                 .build();
     }

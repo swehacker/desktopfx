@@ -1,6 +1,6 @@
 package com.swehacker.desktopfx.ha;
 
-import com.swehacker.desktopfx.exceptions.RoomNotFoundException;
+import com.swehacker.desktopfx.ha.exceptions.RoomNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,6 +39,32 @@ public class MyHome implements Home {
     @Override
     public void addRoom(Room newRoom) {
         rooms.add(newRoom);
+    }
+
+    @Override
+    public void addAccessories(List<Accessory> newAccessories) {
+        for ( Accessory accessory : newAccessories ) {
+            addAccessory(accessory);
+        }
+    }
+
+    @Override
+    public void addAccessories(Iterator<Accessory> newAccessories) {
+        newAccessories.forEachRemaining(accessory -> addAccessory(accessory));
+    }
+
+    @Override
+    public void addAccessory(Accessory accessory) {
+        String roomName = accessory.getRoom();
+        Room room;
+        try {
+            room = getRoom(roomName);
+        } catch (RoomNotFoundException rnfe) {
+            room = createRoom(roomName);
+        }
+
+        room.addAccessory(accessory);
+        addRoom(room);
     }
 
     @Override

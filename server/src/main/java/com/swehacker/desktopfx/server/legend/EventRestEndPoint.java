@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/event")
+@RequestMapping(value = "/rest/event")
 public class EventRestEndPoint {
     @Autowired
     EventRepository eventRepository;

@@ -3,3 +3,5 @@ include 'client'
 findProject(':client')?.name = 'desktopfx-client'
 include 'server'
 findProject(':server')?.name = 'desktopfx-server'
+include 'desktopfx-commons'
+
