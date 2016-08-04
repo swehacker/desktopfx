@@ -30,6 +30,10 @@ project(":desktopfx-server") {
 
     }
 
+    bootRepackage {
+        mainClass = 'com.swehacker.desktopfx.server.DesktopFXServer'
+    }
+
     dependencies {
         compile project(':desktopfx-commons')
         compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'

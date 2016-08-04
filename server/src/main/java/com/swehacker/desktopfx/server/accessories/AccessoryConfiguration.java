@@ -5,6 +5,7 @@ import com.swehacker.desktopfx.ha.Home;
 import com.swehacker.desktopfx.ha.MyHome;
 import com.swehacker.desktopfx.server.openhab.OpenHABService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
@@ -37,8 +38,8 @@ public class AccessoryConfiguration {
     private void readConfig(Properties prop, List<Accessory> accessories) {
         HashSet<String> keys = new HashSet<>();
         try {
-            InputStreamReader is = new InputStreamReader(AccessoryConfiguration.class.getClassLoader().getResourceAsStream("config.properties"), "UTF-8");
-            prop.load(is);
+            FileSystemResource fsr = new FileSystemResource("config.properties");
+            prop.load(new InputStreamReader(fsr.getInputStream(), "UTF-8"));
 
             Enumeration e = prop.propertyNames();
             while( e.hasMoreElements() ) {
