@@ -76,13 +76,7 @@ public class AccessoryConfiguration {
         return item;
     }
 
-    private static void group(List items) {
-        Collections.sort(items, new Comparator<Accessory>() {
-            @Override
-            public int compare(Accessory accessory1, Accessory accessory2)
-            {
-                return accessory1.getRoom().compareTo(accessory2.getRoom());
-            }
-        });
+    private static void group(List<Accessory> items) {
+        Collections.sort(items, (accessory1, accessory2) -> accessory1.getRoom().compareTo(accessory2.getRoom()));
     }
 }
