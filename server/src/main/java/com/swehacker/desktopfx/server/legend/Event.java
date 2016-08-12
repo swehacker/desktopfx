@@ -1,5 +1,6 @@
 package com.swehacker.desktopfx.server.legend;
 
+import io.swagger.annotations.ApiModel;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
