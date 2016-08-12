@@ -1,7 +1,4 @@
-rootProject.name = 'desktopfx'
+rootProject.name = 'hacfx'
 include 'client'
-findProject(':client')?.name = 'desktopfx-client'
 include 'server'
-findProject(':server')?.name = 'desktopfx-server'
-include 'desktopfx-commons'
-
+include 'commons'

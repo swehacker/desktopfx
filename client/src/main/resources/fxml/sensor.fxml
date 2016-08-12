@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Text?>
 <BorderPane prefHeight="480.0" prefWidth="800.0" style="-fx-background-color: #242424;"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.swehacker.desktopfx.fx.screens.SensorScreen">
+            fx:controller="com.swehacker.hacfx.fx.screens.SensorScreen">
     <top>
         <HBox style="-fx-background-color: #191919;" alignment="CENTER">
             <children>

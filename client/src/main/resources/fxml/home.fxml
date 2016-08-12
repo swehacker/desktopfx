@@ -2,12 +2,12 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<BorderPane fx:id="mainPane" fx:controller="com.swehacker.desktopfx.fx.screens.HomeScreen"
+<BorderPane fx:id="mainPane" fx:controller="com.swehacker.hacfx.fx.screens.HomeScreen"
             xmlns:fx="http://javafx.com/fxml">
     <top>
         <HBox fx:id="headerPane" alignment="CENTER">
             <children>
-                <Text styleClass="header-text">DesktopFx - Home Automation Controller</Text>
+                <Text styleClass="header-text">Home Automation Controller</Text>
             </children>
         </HBox>
     </top>

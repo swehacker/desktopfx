@@ -17,7 +17,7 @@ subprojects {
     version '0.1-SNAPSHOT'
 }
 
-project(":desktopfx-server") {
+project(":server") {
 
     apply plugin: 'spring-boot'
     apply plugin: 'io.spring.dependency-management'
@@ -31,11 +31,11 @@ project(":desktopfx-server") {
     }
 
     bootRepackage {
-        mainClass = 'com.swehacker.desktopfx.server.DesktopFXServer'
+        mainClass = 'com.swehacker.hacfx.server.HomeAutomationControllerServer'
     }
 
     dependencies {
-        compile project(':desktopfx-commons')
+        compile project(':commons')
         compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
         compile ('org.springframework.boot:spring-boot-starter-web') {
             exclude module: "spring-boot-starter-tomcat"
@@ -55,11 +55,11 @@ project(":desktopfx-server") {
     }
 }
 
-project(":desktopfx-client") {
+project(":client") {
     apply plugin: 'application'
 
     sourceCompatibility = 1.8
-    mainClassName = 'com.swehacker.desktopfx.App'
+    mainClassName = 'com.swehacker.hacfx.App'
 
     repositories {
         mavenCentral()
@@ -74,6 +74,6 @@ project(":desktopfx-client") {
         compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.23'
         compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
         testCompile 'junit:junit:4.11'
-        compile project(':desktopfx-commons')
+        compile project(':commons')
     }
 }
