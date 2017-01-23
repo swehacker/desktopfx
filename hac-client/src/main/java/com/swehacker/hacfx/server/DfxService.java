@@ -47,13 +47,13 @@ public class DfxService {
 
     public DfxService(final String ip, final int port) {
         LOG.info("Connecting to the DfxServer " + ip + ":" + port );
-        _restURL = "http://" + ip + ":" + port + "/rest";
+        _restURL = "http://" + ip + ":" + port + "/api";
         client = ClientBuilder.newBuilder()
                 .build();
     }
 
     public Home getAccessories() {
-        WebTarget target = client.target(_restURL + "/accessory");
+        WebTarget target = client.target(_restURL + "/accessories");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         if ( response.getStatus() == 200 ) {
             List<Accessory> accessories = response.readEntity(new GenericType<List<Accessory>>() {});
@@ -67,7 +67,7 @@ public class DfxService {
     }
 
     public void switchState(String item, STATE state) {
-        WebTarget target = client.target(_restURL + "/accessory/" + item);
+        WebTarget target = client.target(_restURL + "/accessories/" + item);
         Form form = new Form();
         form.param("state", state.toString());
         Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
@@ -78,7 +78,7 @@ public class DfxService {
 
     public List<Event> getEvents(String topic) {
         try {
-            WebTarget target = client.target(_restURL + "/event?topic=" + URLEncoder.encode(topic, "UTF-8"));
+            WebTarget target = client.target(_restURL + "/events?topic=" + URLEncoder.encode(topic, "UTF-8"));
             Response response = target.request(MediaType.APPLICATION_JSON).get();
             if (response.getStatus() == 200) {
                 return response.readEntity(new GenericType<List<Event>>() {});

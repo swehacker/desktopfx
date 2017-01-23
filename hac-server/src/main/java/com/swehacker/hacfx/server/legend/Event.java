@@ -15,7 +15,7 @@ public class Event {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     @NotNull @DateTimeFormat
-    private Date time;
+    private long time;
     @NotNull @NotEmpty
     private String topic;
     private double value;
@@ -23,16 +23,16 @@ public class Event {
     public Event() {}
 
     public Event(Event event) {
-        this.setTime(new Date());
+        this.setTime(new Date().getTime());
         this.setTopic(event.getTopic());
         this.setValue(event.getValue());
     }
 
-    public Date getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

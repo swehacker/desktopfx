@@ -38,6 +38,6 @@ public class SwaggerConfiguration {
     @SuppressWarnings("unchecked")
     private Predicate<String> documentPaths() {
         return Predicates.or(
-                PathSelectors.regex("/rest.*"));
+                PathSelectors.regex("/api.*"));
     }
 }

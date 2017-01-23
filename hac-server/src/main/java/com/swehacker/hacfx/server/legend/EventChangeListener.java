@@ -62,7 +62,7 @@ public class EventChangeListener implements MqttCallback, ApplicationListener<Ap
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Event event = new Event();
         event.setTopic(topic);
-        event.setTime(new Date());
+        event.setTime(new Date().getTime());
         if ( message.toString().equalsIgnoreCase("ON") ) {
             event.setValue(1);
             eventRepository.save(event);

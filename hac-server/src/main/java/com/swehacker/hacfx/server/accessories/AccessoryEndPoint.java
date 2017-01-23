@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 @Api(value = "accessories", description = "Accessory Management")
 @RestController
-@RequestMapping("/rest/accessory")
+@RequestMapping("/api/accessories")
 public class AccessoryEndPoint {
     @Autowired
     private OpenHABService openHABService;
@@ -19,7 +19,7 @@ public class AccessoryEndPoint {
     @Autowired
     AccessoryConfiguration accessoryConfiguration;
 
-    @ApiOperation(value = "getAllAccessories", nickname = "getAllAccessories", notes = "Returns a list of configured accessories")
+    @ApiOperation(value = "findAll", nickname = "FindAll", notes = "Returns a list of configured accessories")
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public Iterator<Accessory> getAllAccessories() {
         return accessoryConfiguration.getHome().getAccessories();
