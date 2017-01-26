@@ -1,5 +1,6 @@
 package com.swehacker.hacfx.server.legend;
 
+import com.swehacker.hacfx.server.model.Event;
 import com.swehacker.hacfx.server.util.NetworkInterfaceUtil;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;

@@ -12,12 +12,6 @@ public class HomeAutomationControllerServer {
     EventChangeListener eventChangeListener;
 
     public static void main(String...args) {
-        if ( args.length > 0 ) {
-            if (args[0].equalsIgnoreCase("password")) {
-                System.out.println(PasswordGenerator.generate());
-            }
-        }
-
         SpringApplication.run(HomeAutomationControllerServer.class, args);
     }
 }

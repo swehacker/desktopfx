@@ -1,8 +1,6 @@
-package com.swehacker.hacfx.server.legend;
+package com.swehacker.hacfx.server.model;
 
-import io.swagger.annotations.ApiModel;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,11 +8,8 @@ import java.util.Date;
 
 @Entity
 @Table(name="events")
-public class Event {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private long id;
-    @NotNull @DateTimeFormat
+public class Event extends AbstractEntity {
+    @NotNull
     private long time;
     @NotNull @NotEmpty
     private String topic;

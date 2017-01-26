@@ -1,5 +1,6 @@
 package com.swehacker.hacfx.server.legend;
 
+import com.swehacker.hacfx.server.model.Event;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

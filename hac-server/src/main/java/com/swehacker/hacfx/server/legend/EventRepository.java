@@ -1,5 +1,6 @@
 package com.swehacker.hacfx.server.legend;
 
+import com.swehacker.hacfx.server.model.Event;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
