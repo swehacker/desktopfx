@@ -28,13 +28,14 @@ public class DfxService {
         UNKNOWN("UNKNOWN");
 
         private final String state;
+
         STATE(final String state) {
             this.state = state;
         }
 
         public static STATE convert(String state) {
-            for (STATE s: STATE.values()) {
-                if ( s.name().equalsIgnoreCase(state) ) {
+            for (STATE s : STATE.values()) {
+                if (s.name().equalsIgnoreCase(state)) {
                     return s;
                 }
             }
@@ -44,7 +45,7 @@ public class DfxService {
     }
 
     public DfxService(final String ip, final int port) {
-        LOG.info("Connecting to the DfxServer " + ip + ":" + port );
+        LOG.info("Connecting to the DfxServer " + ip + ":" + port);
         _restURL = "http://" + ip + ":" + port + "/api";
         client = ClientBuilder.newBuilder()
                 .build();
@@ -54,9 +55,31 @@ public class DfxService {
     public House getAccessories() {
         WebTarget target = client.target(_restURL + "/house/1");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
-        if ( response.getStatus() == 200 ) {
-            House house = response.readEntity(new GenericType<House>() {});
+        if (response.getStatus() == 200) {
+            House house = response.readEntity(new GenericType<House>() {
+            });
             return house;
+        }
+
+        return null;
+    }
+
+    public STATE switchState(String item) {
+        WebTarget target = client.target(_restURL + "/accessories/" + item + "/switch");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        if (response.getStatus() == 200) {
+            String state = response.readEntity(new GenericType<String>() {});
+            return STATE.convert(state);
+        }
+
+        return STATE.UNKNOWN;
+    }
+
+    public Long sensorValue(String item) {
+        WebTarget target = client.target(_restURL + "/accessories/" + item + "/sensor");
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        if (response.getStatus() == 200) {
+            return response.readEntity(new GenericType<Long>() {});
         }
 
         return null;
@@ -67,7 +90,7 @@ public class DfxService {
         Form form = new Form();
         form.param("state", state.toString());
         Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-        if ( response.getStatus() != 200 ) {
+        if (response.getStatus() != 200) {
             LOG.severe(response.toString());
         }
     }
@@ -77,7 +100,8 @@ public class DfxService {
             WebTarget target = client.target(_restURL + "/events?topic=" + URLEncoder.encode(topic, "UTF-8"));
             Response response = target.request(MediaType.APPLICATION_JSON).get();
             if (response.getStatus() == 200) {
-                return response.readEntity(new GenericType<List<Event>>() {});
+                return response.readEntity(new GenericType<List<Event>>() {
+                });
             }
         } catch (UnsupportedEncodingException uee) {
             LOG.warning("Couldn't encode the URL");

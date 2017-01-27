@@ -81,7 +81,7 @@ public class HomeScreen implements Screen {
                 if (accessory.getType() == Accessory.Type.SWITCH) {
                     Switch roomSwitch = new Switch();
                     roomSwitch.setName(accessory.getLabel());
-
+                    roomSwitch.setValue(App.getDxfService().switchState(accessory.getOpenHABId()).name());
                     roomSwitch.setOnMouseClicked(event -> {
                         if (roomSwitch.isOn()) {
                             App.getDxfService().switchState(accessory.getOpenHABId(), DfxService.STATE.OFF);
@@ -94,7 +94,7 @@ public class HomeScreen implements Screen {
                 } else if (accessory.getType() == Accessory.Type.LAMP) {
                     Lamp lampSwitch = new Lamp();
                     lampSwitch.setName(accessory.getLabel());
-
+                    lampSwitch.setValue(App.getDxfService().switchState(accessory.getOpenHABId()).name());
                     lampSwitch.setOnMouseClicked(event -> {
                         if (lampSwitch.isOn()) {
                             App.getDxfService().switchState(accessory.getOpenHABId(), DfxService.STATE.OFF);
@@ -107,6 +107,7 @@ public class HomeScreen implements Screen {
                 } else if (accessory.getType() == Accessory.Type.TEMPERATURE) {
                     Temperature roomTemperature = new Temperature();
                     roomTemperature.setName(accessory.getLabel());
+                    accessory.setValue(App.getDxfService().sensorValue(accessory.getOpenHABId()).toString());
                     roomTemperature.valueProperty().bind(accessory.valueProperty());
                     roomTemperature.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
@@ -116,6 +117,7 @@ public class HomeScreen implements Screen {
                 } else if (accessory.getType() == Accessory.Type.HUMIDITY) {
                     Humidity humidity = new Humidity();
                     humidity.setName(accessory.getLabel());
+                    accessory.setValue(App.getDxfService().sensorValue(accessory.getOpenHABId()).toString());
                     humidity.valueProperty().bind(accessory.valueProperty());
                     humidity.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);

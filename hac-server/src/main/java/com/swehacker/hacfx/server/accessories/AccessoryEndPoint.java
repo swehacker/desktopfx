@@ -34,4 +34,16 @@ public class AccessoryEndPoint {
     public void changeState(@PathVariable String id, @RequestParam String state) {
         openHABService.switchState(id, OpenHABService.STATE.convert(state.toUpperCase()));
     }
+
+    @ApiOperation(value = "getSwitchState", nickname = "getSwitchState", notes = "Return state of a switch or a lamp")
+    @RequestMapping(value = "/{id}/switch", method = RequestMethod.GET)
+    public String getState(@PathVariable String id) {
+        return openHABService.getSwitchState(id).name();
+    }
+
+    @ApiOperation(value = "getSensorValue", nickname = "getSensorValue", notes = "Return the current value of a sensor")
+    @RequestMapping(value = "/{id}/sensor", method = RequestMethod.GET)
+    public String getSensorValue(@PathVariable String id) {
+        return openHABService.getSensorValue(id);
+    }
 }
