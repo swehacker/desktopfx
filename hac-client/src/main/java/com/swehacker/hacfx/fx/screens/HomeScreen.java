@@ -29,7 +29,8 @@ import com.swehacker.hacfx.fx.controls.Humidity;
 import com.swehacker.hacfx.fx.controls.Lamp;
 import com.swehacker.hacfx.fx.controls.Switch;
 import com.swehacker.hacfx.fx.controls.Temperature;
-import com.swehacker.hacfx.ha.Accessory;
+import com.swehacker.hacfx.model.Accessory;
+import com.swehacker.hacfx.model.Room;
 import com.swehacker.hacfx.server.DfxService;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
@@ -70,38 +71,42 @@ public class HomeScreen implements Screen {
     private void update() {
         try {
             ArrayList<Accessory> accessories = new ArrayList<>();
-            App.getMyHome().getAccessories().forEachRemaining(accessories::add);
+            for ( Room room: App.getMyHome().getRooms()) {
+                for ( Accessory accessory : room.getAccessories() ) {
+                    accessories.add(accessory);
+                }
+            }
 
             for (Accessory accessory : accessories ) {
                 if (accessory.getType() == Accessory.Type.SWITCH) {
                     Switch roomSwitch = new Switch();
-                    roomSwitch.setName(accessory.getName());
+                    roomSwitch.setName(accessory.getLabel());
 
                     roomSwitch.setOnMouseClicked(event -> {
                         if (roomSwitch.isOn()) {
-                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.OFF);
+                            App.getDxfService().switchState(accessory.getOpenHABId(), DfxService.STATE.OFF);
                         } else {
-                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.ON);
+                            App.getDxfService().switchState(accessory.getOpenHABId(), DfxService.STATE.ON);
                         }
                     });
                     roomSwitch.valueProperty().bind(accessory.valueProperty());
                     switchPanel.getChildren().add(roomSwitch);
                 } else if (accessory.getType() == Accessory.Type.LAMP) {
                     Lamp lampSwitch = new Lamp();
-                    lampSwitch.setName(accessory.getName());
+                    lampSwitch.setName(accessory.getLabel());
 
                     lampSwitch.setOnMouseClicked(event -> {
                         if (lampSwitch.isOn()) {
-                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.OFF);
+                            App.getDxfService().switchState(accessory.getOpenHABId(), DfxService.STATE.OFF);
                         } else {
-                            App.getDxfService().switchState(accessory.getLabel(), DfxService.STATE.ON);
+                            App.getDxfService().switchState(accessory.getOpenHABId(), DfxService.STATE.ON);
                         }
                     });
                     lampSwitch.valueProperty().bind(accessory.valueProperty());
                     switchPanel.getChildren().add(lampSwitch);
                 } else if (accessory.getType() == Accessory.Type.TEMPERATURE) {
                     Temperature roomTemperature = new Temperature();
-                    roomTemperature.setName(accessory.getName());
+                    roomTemperature.setName(accessory.getLabel());
                     roomTemperature.valueProperty().bind(accessory.valueProperty());
                     roomTemperature.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);
@@ -110,7 +115,7 @@ public class HomeScreen implements Screen {
                     sensorPanel.getChildren().add(roomTemperature);
                 } else if (accessory.getType() == Accessory.Type.HUMIDITY) {
                     Humidity humidity = new Humidity();
-                    humidity.setName(accessory.getName());
+                    humidity.setName(accessory.getLabel());
                     humidity.valueProperty().bind(accessory.valueProperty());
                     humidity.setOnMouseClicked(event -> {
                         parent.changeScreen(ScreenController.SCREEN.SENSOR);

@@ -1,13 +1,11 @@
-package com.swehacker.hacfx.server.model;
+package com.swehacker.hacfx.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * This is the configuration for a specific accessory.
  **/
-@Entity
-@Table(name = "accessories")
 public class Accessory extends AbstractEntity {
 
     public enum Type {
@@ -17,14 +15,11 @@ public class Accessory extends AbstractEntity {
         HUMIDITY
     }
 
-    @NotNull
     private String openhab_id;
-    @NotNull
     private String label;
-    @Enumerated(EnumType.STRING)
     private Type type;
-    @NotNull
     private String topic;
+    private StringProperty value = new SimpleStringProperty("");
 
     /**
      * Returns the name of this accessory in OpenHAB.
@@ -99,5 +94,17 @@ public class Accessory extends AbstractEntity {
      */
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public String getValue() {
+        return this.value.get();
+    }
+
+    public StringProperty valueProperty() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value.set(value);
     }
 }

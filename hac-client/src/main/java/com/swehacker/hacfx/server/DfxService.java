@@ -1,9 +1,7 @@
 package com.swehacker.hacfx.server;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.swehacker.hacfx.ha.Accessory;
-import com.swehacker.hacfx.ha.Home;
-import com.swehacker.hacfx.ha.MyHome;
+import com.swehacker.hacfx.model.House;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -52,25 +50,23 @@ public class DfxService {
                 .build();
     }
 
-    public Home getAccessories() {
-        WebTarget target = client.target(_restURL + "/accessories");
+    //TODO: Hardcoded value, client should be able to configure wich house it will display
+    public House getAccessories() {
+        WebTarget target = client.target(_restURL + "/house/1");
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         if ( response.getStatus() == 200 ) {
-            List<Accessory> accessories = response.readEntity(new GenericType<List<Accessory>>() {});
-
-            Home home = new MyHome();
-            home.addAccessories(accessories);
-            return home;
+            House house = response.readEntity(new GenericType<House>() {});
+            return house;
         }
 
         return null;
     }
 
     public void switchState(String item, STATE state) {
-        WebTarget target = client.target(_restURL + "/accessories/" + item);
+        WebTarget target = client.target(_restURL + "/accessories/" + item + "/switch/" + state.toString());
         Form form = new Form();
         form.param("state", state.toString());
-        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
         if ( response.getStatus() != 200 ) {
             LOG.severe(response.toString());
         }

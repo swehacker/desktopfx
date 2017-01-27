@@ -1,7 +1,6 @@
 package com.swehacker.hacfx.server;
 
-import com.swehacker.hacfx.server.legend.EventChangeListener;
-import com.swehacker.hacfx.server.util.PasswordGenerator;
+import com.swehacker.hacfx.server.events.EventChangeListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

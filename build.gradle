@@ -36,7 +36,6 @@ project(":hac-server") {
     }
 
     dependencies {
-        compile project(':hac-commons')
         compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
         compile ('org.springframework.boot:spring-boot-starter-web') {
             exclude module: "spring-boot-starter-tomcat"
@@ -75,6 +74,5 @@ project(":hac-client") {
         compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.23'
         compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
         testCompile 'junit:junit:4.11'
-        compile project(':hac-commons')
     }
 }

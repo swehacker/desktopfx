@@ -60,7 +60,7 @@ public class SensorScreen implements Screen {
         sensor_chart.getData().clear();
         sensor_chart.setTitle("Hourly temperature in Celsius");
         XYChart.Series series = new XYChart.Series();
-        series.setName(App.getCurrentItem().getName());
+        series.setName(App.getCurrentItem().getLabel());
         events = App.getDxfService().getEvents(App.getCurrentItem().getTopic());
         for (DfxService.Event event : events) {
             series.getData().add(new XYChart.Data<>(format(event.time), event.value));

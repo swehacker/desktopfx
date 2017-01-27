@@ -1,13 +1,11 @@
 package com.swehacker.hacfx.server.accessories;
 
-import com.swehacker.hacfx.ha.Accessory;
+import com.swehacker.hacfx.server.model.Accessory;
 import com.swehacker.hacfx.server.openhab.OpenHABService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Iterator;
 
 @Api(value = "accessories", description = "Accessory Management")
 @RestController
@@ -17,17 +15,23 @@ public class AccessoryEndPoint {
     private OpenHABService openHABService;
 
     @Autowired
-    AccessoryConfiguration accessoryConfiguration;
+    AccessoryRepository accessoryRepository;
 
     @ApiOperation(value = "findAll", nickname = "FindAll", notes = "Returns a list of configured accessories")
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public Iterator<Accessory> getAllAccessories() {
-        return accessoryConfiguration.getHome().getAccessories();
+    public Iterable<Accessory> getAllAccessories() {
+        return accessoryRepository.findAll();
     }
 
-    @ApiOperation(value = "changeState", nickname = "changeState", notes = "Change the state of a accessory, like turning an accessory on or off")
-    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
-    public void changeState(@PathVariable String name, @RequestParam String state) {
-        openHABService.switchState(name, OpenHABService.STATE.convert(state));
+    @ApiOperation(value = "findById", nickname = "FindById", notes = "Returns an accessory")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    public Accessory findAccessory(@PathVariable("id") Long id) {
+        return accessoryRepository.findOne(id);
+    }
+
+    @ApiOperation(value = "switch", nickname = "switch", notes = "Change the state of a accessory, like turning a lamp on or off")
+    @RequestMapping(value = "/{id}/switch/{state}", method = RequestMethod.PUT)
+    public void changeState(@PathVariable String id, @RequestParam String state) {
+        openHABService.switchState(id, OpenHABService.STATE.convert(state.toUpperCase()));
     }
 }

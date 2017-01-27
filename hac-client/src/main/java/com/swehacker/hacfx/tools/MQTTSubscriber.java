@@ -57,7 +57,7 @@ public class MQTTSubscriber implements MqttCallback {
     public static void main(String...args) {
         if ( args.length < 2 ) {
             System.out.println("Usage: MQTTSubscriber tcp://<ip>:<port> <subscription>");
-            System.out.println("For subscription use /my/room/legend, /my/# or /my/room/# to receive messages");
+            System.out.println("For subscription use /my/room/events, /my/# or /my/room/# to receive messages");
             System.exit(0);
         }
 

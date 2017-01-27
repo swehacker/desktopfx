@@ -1,6 +1,7 @@
 package com.swehacker.hacfx.server;
 
 import com.swehacker.hacfx.App;
+import com.swehacker.hacfx.model.Accessory;
 import com.swehacker.hacfx.util.NetworkInterfaceUtil;
 import javafx.application.Platform;
 import org.eclipse.paho.client.mqttv3.*;
@@ -55,12 +56,10 @@ public class AccessoryChangeListener implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Platform.runLater(() -> {
-            App.getMyHome().getAccessories().forEachRemaining(accessory -> {
-                if ( topic.equalsIgnoreCase(accessory.getTopic()) ) {
-                    accessory.setValue(message.toString());
-                    return;
-                }
-            });
+            Accessory accessory = App.getMyHome().findByTopic(topic);
+            if ( accessory != null ) {
+                accessory.setValue(message.toString());
+            }
         });
     }
 

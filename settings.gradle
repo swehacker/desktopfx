@@ -1,4 +1,3 @@
 rootProject.name = 'hacfx'
 include 'hac-client'
 include 'hac-server'
-include 'hac-commons'

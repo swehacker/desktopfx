@@ -1,4 +1,4 @@
-package com.swehacker.hacfx.server.legend;
+package com.swehacker.hacfx.server.events;
 
 import com.swehacker.hacfx.server.model.Event;
 import io.swagger.annotations.Api;

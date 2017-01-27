@@ -26,8 +26,8 @@ package com.swehacker.hacfx;
 
 import com.swehacker.hacfx.configuration.SystemCapabilities;
 import com.swehacker.hacfx.fx.screens.ScreenController;
-import com.swehacker.hacfx.ha.Accessory;
-import com.swehacker.hacfx.ha.Home;
+import com.swehacker.hacfx.model.Accessory;
+import com.swehacker.hacfx.model.House;
 import com.swehacker.hacfx.server.AccessoryChangeListener;
 import com.swehacker.hacfx.server.DfxService;
 import com.swehacker.hacfx.server.ServerConfiguration;
@@ -55,7 +55,7 @@ public class App extends Application {
     private static AccessoryChangeListener accessoryChangeListener;
     private static DfxService dfxService;
     private static SystemCapabilities systemCapabilities;
-    private static Home myHome;
+    private static House myHome;
 
     @Override
     public void init() {
@@ -126,7 +126,7 @@ public class App extends Application {
         return currentItem;
     }
 
-    public static Home getMyHome() {
+    public static House getMyHome() {
         return myHome;
     }
 
