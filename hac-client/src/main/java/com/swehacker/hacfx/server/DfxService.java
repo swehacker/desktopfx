@@ -87,6 +87,7 @@ public class DfxService {
     }
 
     public static class Event {
+        public Long id;
         public Date time;
         public String topic;
         public double value;
