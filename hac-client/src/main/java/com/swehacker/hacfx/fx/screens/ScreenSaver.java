@@ -24,14 +24,22 @@
 
 package com.swehacker.hacfx.fx.screens;
 
+import javafx.fxml.FXML;
+import javafx.scene.layout.BorderPane;
+
 import java.util.logging.Logger;
 
 public class ScreenSaver implements Screen {
     private static Logger LOG = Logger.getLogger(ScreenSaver.class.getName());
     private ScreenController parent;
 
+    @FXML
+    BorderPane mainPane;
+
     @Override
     public void setScreenParent(ScreenController screenPage) {
         this.parent = screenPage;
+
+        mainPane.setOnTouchPressed(event -> parent.changeScreen(ScreenController.SCREEN.HOME));
     }
 }

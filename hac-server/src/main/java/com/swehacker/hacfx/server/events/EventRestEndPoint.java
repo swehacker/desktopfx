@@ -16,7 +16,7 @@ import java.util.Date;
 @RestController
 @RequestMapping(value = "/api/events")
 public class EventRestEndPoint {
-    private static long FOURTEEN_DAYS = 1000 * 60 * 24 * 14;
+    private static long FOURTEEN_DAYS = 24 * 60 * 60 * 1000 * 14;
 
     @Autowired
     EventRepository eventRepository;
