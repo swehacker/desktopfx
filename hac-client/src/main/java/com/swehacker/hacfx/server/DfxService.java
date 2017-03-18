@@ -51,7 +51,7 @@ public class DfxService {
                 .build();
     }
 
-    //TODO: Hardcoded value, client should be able to configure wich house it will display
+    //TODO: Hardcoded value, client should be able to configure which house it will display
     public House getAccessories() {
         WebTarget target = client.target(_restURL + "/house/1");
         Response response = target.request(MediaType.APPLICATION_JSON).get();

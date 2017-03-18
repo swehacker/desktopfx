@@ -31,6 +31,8 @@ import com.swehacker.hacfx.model.House;
 import com.swehacker.hacfx.server.AccessoryChangeListener;
 import com.swehacker.hacfx.server.DfxService;
 import com.swehacker.hacfx.server.ServerConfiguration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
@@ -39,6 +41,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -110,6 +113,26 @@ public class App extends Application {
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
         LOG.config("Setting the Screen to " + bounds.getWidth() + "x" + bounds.getHeight());
+
+        Timeline screenSaver = new Timeline(new KeyFrame(Duration.seconds(60), (event) ->
+                screenController.changeScreen(ScreenController.SCREEN.SCREENSAVER)
+        ));
+        screenSaver.setCycleCount(Timeline.INDEFINITE);
+        screenSaver.play();
+
+        scene.setOnMouseMoved((event) -> {
+            if ( ScreenController.SCREEN.SCREENSAVER == screenController.getCurrent() ) {
+                screenController.changeScreen(ScreenController.SCREEN.HOME);
+            }
+            screenSaver.playFromStart();
+        });
+
+        scene.setOnTouchPressed((event) -> {
+            if ( ScreenController.SCREEN.SCREENSAVER == screenController.getCurrent() ) {
+                screenController.changeScreen(ScreenController.SCREEN.HOME);
+            }
+            screenSaver.playFromStart();
+        });
 
         primaryStage.show();
     }

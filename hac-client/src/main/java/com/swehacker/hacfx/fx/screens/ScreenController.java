@@ -41,11 +41,13 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class ScreenController extends StackPane {
-    public static final Logger logger = Logger.getLogger(App.class.getName());
+    private static final Logger logger = Logger.getLogger(App.class.getName());
+    private static SCREEN current;
 
     public enum SCREEN {
         HOME("/fxml/home.fxml"),
-        SENSOR("/fxml/sensor.fxml");
+        SENSOR("/fxml/sensor.fxml"),
+        SCREENSAVER("/fxml/screensaver.fxml");
 
         final String resource;
 
@@ -112,6 +114,8 @@ public class ScreenController extends StackPane {
         } else {
             getChildren().add(screens.get(screen.name()));
         }
+
+        current = screen;
     }
 
     private void changeScreenAnimated(SCREEN screen) {
@@ -137,5 +141,11 @@ public class ScreenController extends StackPane {
                     new KeyFrame(new Duration(500), new KeyValue(opacity, 1.0)));
             fadeIn.play();
         }
+
+        current = screen;
+    }
+
+    public SCREEN getCurrent() {
+        return current;
     }
 }
